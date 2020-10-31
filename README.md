@@ -7,6 +7,9 @@
 - deploymets - директория с манифестами под разные системы оркистровки приложений.
 - docs - документации к проекту.
 - internal - приватный код приложений.
-- pkg - публичный код приложений.
 - web - single page application UI.
 - migrations - sql скрипты миграций к базе данных.
+
+## Работа с Makefile
+- make gen-protoc генерирует код для protobuff, grpc для go и js + документацию к api.
+- make go-lint запускает кодо анализ гошного кода.
