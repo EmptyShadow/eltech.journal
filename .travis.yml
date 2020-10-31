@@ -20,7 +20,7 @@ jobs:
         - docker run --rm -v $(pwd):/app -w /app golangci/golangci-lint:v1.31.0 golangci-lint run
     - name: "Build"
       script:
-        - go build -o /.build/eltech.journal ./cmd/journal
+        - go build -o .build/eltech.journal ./cmd/journal
     - stage: test
       if: branch != main
       name: "Unit tests"
