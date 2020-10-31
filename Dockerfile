@@ -15,7 +15,6 @@ RUN apk --no-cache add ca-certificates tzdata && \
     cp -r -f /usr/share/zoneinfo/$TZ /etc/localtime
 COPY ./cmd ./cmd
 COPY ./internal ./internal
-COPY ./pkg ./pkg
 RUN go build -mod=vendor -o /journal ./cmd/journal
 
 # Объединение бинарника и статики ui в один образ без каких либо других зависимостей
