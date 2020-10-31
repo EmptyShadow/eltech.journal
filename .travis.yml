@@ -1,0 +1,43 @@
+language: go
+
+go: 1.15
+
+services: docker
+
+stages:
+  - name: lint
+    if: branch != main
+  - name: test
+    if: branch != main
+
+jobs:
+  include:
+    - stage: lint
+      name: "Linter"
+      install:
+        - docker pull golangci/golangci-lint:v1.31.0
+      script:
+        - docker run --rm -v $(pwd):/app -w /app golangci/golangci-lint:v1.31.0 golangci-lint run
+    - name: "Build"
+      script:
+        - go build -o .build/eltech.journal ./cmd/journal
+    - stage: test
+      if: branch != main
+      name: "Unit tests"
+      script:
+        - go test --tags=unit -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
+    - name: "Integration tests"
+      script:
+        - go test --tags=integration -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
+
+deploy:
+  - provider: script
+    script:
+      - docker login -u $(DOCKER_USER) -p $(DOCKER_PWD)
+      - docker build -t emptyshadow/eltech.journal:latest .
+      - docker build -t emptyshadow/eltech.journal:$(TRAVIS_TAG) .
+      - docker push emptyshadow/eltech.journal:latest
+      - docker push emptyshadow/eltech.journal:$(TRAVIS_TAG)
+    on:
+      tags: true
+      branch: main
