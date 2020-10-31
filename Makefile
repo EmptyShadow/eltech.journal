@@ -1,0 +1,4 @@
+gen-protoc:
+	@cd api && ./genproto.sh
+go-lint:
+	@docker run --rm -v $(pwd):/app -w /app golangci/golangci-lint:v1.31.0 golangci-lint run

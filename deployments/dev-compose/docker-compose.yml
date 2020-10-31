@@ -1,0 +1,55 @@
+version: '3.4'
+
+services:
+  gateway:
+    image: grpcweb/envoy:1.2.1
+    command: [
+        "/usr/local/bin/envoy",
+        "-c", "/etc/envoy/envoy.yaml",
+        "-l", "trace",
+        "--log-path", "/tmp/envoy_info.log",
+    ]
+    volumes:
+      - ./configs/envoy.yaml:/etc/envoy/envoy.yaml
+    ports:
+      - "80"
+    depends_on:
+      - journal
+  journal:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - ./configs/journal.env
+    ports:
+      - "80"   # UI
+      - "7010" # HTTP health
+      - "7020" # HTTP profiling
+      - "9000" # gRPC API
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:9.6.17-alpine
+    restart: on-failure
+    env_file:
+      - ./configs/postgres.env
+    volumes:
+      - postgres-data:/data/postgres
+    ports:
+      - "5432"
+  pgadmin:
+    image: dpage/pgadmin4:4.26
+    user: "$UID:$GID"
+    env_file:
+      - ./configs/pgadmin.env
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "80"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres-data:
+  pgadmin-data:
