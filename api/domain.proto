@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option go_package = "github.com/EmptyShadow/eltech.journal/api/domain";
+
+package github.com.EmptyShadow.eltech.journal.api;
+
+message Test {
+  string Event = 1;
+}

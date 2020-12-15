@@ -1,20 +1,6 @@
 version: '3.4'
 
 services:
-  gateway:
-    image: grpcweb/envoy:1.2.1
-    command: [
-        "/usr/local/bin/envoy",
-        "-c", "/etc/envoy/envoy.yaml",
-        "-l", "trace",
-        "--log-path", "/tmp/envoy_info.log",
-    ]
-    volumes:
-      - ./configs/envoy.yaml:/etc/envoy/envoy.yaml
-    ports:
-      - "80"
-    depends_on:
-      - journal
   journal:
     build:
       context: ../../
