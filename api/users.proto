@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package github.com.EmptyShadow.eltech.journal.api;
+option go_package = "github.com/EmptyShadow/eltech.journal/api/users";
+
+import "github.com/EmptyShadow/eltech.journal/api/domain.proto";
+
+message CreateRequest {
+  string Email = 1;
+  github.com.EmptyShadow.eltech.journal.api.FullName FullName = 2;
+  string SHA1HashPWD = 3;
+}
+
+message CreateResponse {
+  github.com.EmptyShadow.eltech.journal.api.User User = 1;
+}
+
+service Users {
+  rpc Create(CreateRequest) returns(CreateResponse) {};
+}

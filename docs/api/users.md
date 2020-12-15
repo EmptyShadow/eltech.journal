@@ -3,52 +3,49 @@
 
 ## Table of Contents
 
-- [domain.proto](#domain.proto)
-    - [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName)
-    - [User](#github.com.EmptyShadow.eltech.journal.api.User)
+- [users.proto](#users.proto)
+    - [CreateRequest](#github.com.EmptyShadow.eltech.journal.api.CreateRequest)
+    - [CreateResponse](#github.com.EmptyShadow.eltech.journal.api.CreateResponse)
+  
+    - [Users](#github.com.EmptyShadow.eltech.journal.api.Users)
   
 - [Scalar Value Types](#scalar-value-types)
 
 
 
-<a name="domain.proto"></a>
+<a name="users.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## domain.proto
+## users.proto
 
 
 
-<a name="github.com.EmptyShadow.eltech.journal.api.FullName"></a>
+<a name="github.com.EmptyShadow.eltech.journal.api.CreateRequest"></a>
 
-### FullName
-Полное имя пользователя.
+### CreateRequest
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| FirstName | [string](#string) |  | Имя. |
-| MiddleName | [string](#string) |  | Отчество. |
-| LastName | [string](#string) |  | Фамилия. |
+| Email | [string](#string) |  |  |
+| FullName | [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName) |  |  |
+| SHA1HashPWD | [string](#string) |  |  |
 
 
 
 
 
 
-<a name="github.com.EmptyShadow.eltech.journal.api.User"></a>
+<a name="github.com.EmptyShadow.eltech.journal.api.CreateResponse"></a>
 
-### User
-Пользователь.
+### CreateResponse
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ID | [string](#string) |  | Идентификатор в формате UUID. |
-| Email | [string](#string) |  | Электронная почта. |
-| FullName | [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName) |  | Полное имя. |
-| CreatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата создания записи. |
-| UpdatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата обновление полей записи. |
-| DeletedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата удаления записи. |
+| User | [User](#github.com.EmptyShadow.eltech.journal.api.User) |  |  |
 
 
 
@@ -59,6 +56,16 @@
  
 
  
+
+
+<a name="github.com.EmptyShadow.eltech.journal.api.Users"></a>
+
+### Users
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| Create | [CreateRequest](#github.com.EmptyShadow.eltech.journal.api.CreateRequest) | [CreateResponse](#github.com.EmptyShadow.eltech.journal.api.CreateResponse) |  |
 
  
 

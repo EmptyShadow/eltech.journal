@@ -1,9 +1,32 @@
 syntax = "proto3";
 
 option go_package = "github.com/EmptyShadow/eltech.journal/api/domain";
-
 package github.com.EmptyShadow.eltech.journal.api;
 
-message Test {
-  string Event = 1;
+import "google/protobuf/timestamp.proto";
+
+// Полное имя пользователя.
+message FullName {
+  // Имя.
+  string FirstName = 1;
+  // Отчество.
+  string MiddleName = 2;
+  // Фамилия.
+  string LastName = 3;
+}
+
+// Пользователь.
+message User {
+  // Идентификатор в формате UUID.
+  string ID = 1;
+  // Электронная почта.
+  string Email = 2;
+  // Полное имя.
+  FullName FullName = 3;
+  // Дата создания записи.
+  google.protobuf.Timestamp CreatedAt = 4;
+  // Дата обновление полей записи.
+  google.protobuf.Timestamp UpdatedAt = 5;
+  // Дата удаления записи.
+  google.protobuf.Timestamp DeletedAt = 6;
 }
