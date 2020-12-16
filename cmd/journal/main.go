@@ -24,8 +24,6 @@ const (
 
 	envPprofAddr = "PPROF_SERVING_ADDR"
 	pprofAddr    = "0.0.0.0:7010"
-
-	envPGConnString = "PG_CONN_STRING"
 )
 
 func main() {
@@ -34,7 +32,7 @@ func main() {
 
 	l.Info("init integrations")
 
-	pgdb := pgx.OpenPool(config.Get(envPGConnString).String(""), serviceName)
+	pgdb := pgx.OpenPool(pgx.ConnString(), serviceName)
 	defer pgdb.Close()
 
 	l.Info("init adapters")

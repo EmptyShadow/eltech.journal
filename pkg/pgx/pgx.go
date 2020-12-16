@@ -8,11 +8,20 @@ import (
 )
 
 const (
+	envPGConnString    = "PG_CONN_STRING"
 	envMaxConnIdleTime = "PG_MAX_CONN_IDLE_TIME"
 	envMaxConnLifetime = "PG_MAX_CONN_LIFETIME"
 	envMaxConns        = "PG_MAX_CONNS"
 	envMinConns        = "PG_MIN_CONNS"
 )
+
+func MustConnString() string {
+	return config.Get(envPGConnString).MustString()
+}
+
+func ConnString() string {
+	return config.Get(envPGConnString).String("")
+}
 
 func OpenPool(connString string, appName string) *pgxpool.Pool {
 	conf, err := pgxpool.ParseConfig(connString)

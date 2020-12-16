@@ -1,5 +1,4 @@
-# сборка бинарника сервера
-FROM golang:alpine AS server-builder
+FROM golang:alpine AS builder
 WORKDIR /app
 ENV CGO_ENABLED 0
 ENV TZ=Europe/Moscow
@@ -14,10 +13,9 @@ COPY go.mod go.mod
 COPY go.sum go.sum
 RUN go build -mod=vendor -o /journal ./cmd/journal
 
-# Объединение бинарника и статики ui в один образ без каких либо других зависимостей
 FROM scratch
-COPY --from=server-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
-COPY --from=server-builder /etc/localtime /etc/localtime
-COPY --from=server-builder /journal /journal
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=builder /etc/localtime /etc/localtime
+COPY --from=builder /journal /journal
 ENTRYPOINT ["/journal"]
 EXPOSE 9000 7010
