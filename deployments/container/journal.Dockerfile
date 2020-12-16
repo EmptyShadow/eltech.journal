@@ -4,13 +4,13 @@ ENV CGO_ENABLED 0
 ENV TZ=Europe/Moscow
 RUN apk --no-cache add ca-certificates tzdata && \
     cp -r -f /usr/share/zoneinfo/$TZ /etc/localtime
-COPY cmd cmd
 COPY api api
 COPY internal internal
 COPY pkg pkg
 COPY vendor vendor
 COPY go.mod go.mod
 COPY go.sum go.sum
+COPY cmd cmd
 RUN go build -mod=vendor -o /journal ./cmd/journal
 
 FROM scratch
