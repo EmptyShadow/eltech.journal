@@ -17,6 +17,8 @@ import (
 )
 
 const (
+	serviceName = "journal"
+
 	envAPIAddr = "API_SERVING_ADDR"
 	apiAddr    = "0.0.0.0:9000"
 
@@ -32,7 +34,7 @@ func main() {
 
 	l.Info("init integrations")
 
-	pgdb := pgx.OpenPool(config.Get(envPGConnString).String(""))
+	pgdb := pgx.OpenPool(config.Get(envPGConnString).String(""), serviceName)
 	defer pgdb.Close()
 
 	l.Info("init adapters")
