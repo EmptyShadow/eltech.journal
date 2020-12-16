@@ -1,5 +1,5 @@
 # сборка бинарника сервера
-FROM golang:1.15-alpine AS server-builder
+FROM golang:alpine AS server-builder
 WORKDIR /app
 ENV CGO_ENABLED 0
 ENV TZ=Europe/Moscow
@@ -20,6 +20,4 @@ COPY --from=server-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-
 COPY --from=server-builder /etc/localtime /etc/localtime
 COPY --from=server-builder /journal /journal
 ENTRYPOINT ["/journal"]
-EXPOSE 9000 # grpc
-EXPOSE 7000 # health
-EXPOSE 7010 # pprof
+EXPOSE 9000 7010

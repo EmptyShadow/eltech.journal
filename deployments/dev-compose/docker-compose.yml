@@ -4,22 +4,20 @@ services:
   journal:
     build:
       context: ../../
-      dockerfile: ../container/Dockerfile-journal
+      dockerfile: deployments/container/journal.Dockerfile
     restart: on-failure
     env_file:
-      - ./configs/journal.env
+      - ../../configs/journal.env
     ports:
-      - "80"   # UI
-      - "7010" # HTTP health
-      - "7020" # HTTP profiling
-      - "9000" # gRPC API
+      - "7010"
+      - "9000"
     depends_on:
       - postgres
   postgres:
     image: postgres:9.6.17-alpine
     restart: "no"
     env_file:
-      - ./configs/postgres.env
+      - postgres.env
     volumes:
       - postgres-data:/data/postgres
       - ./pg-init:/docker-entrypoint-initdb.d
@@ -29,7 +27,7 @@ services:
     image: dpage/pgadmin4:4.26
     user: "$UID:$GID"
     env_file:
-      - ./configs/pgadmin.env
+      - pgadmin.env
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     ports:
