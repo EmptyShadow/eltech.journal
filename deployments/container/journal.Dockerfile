@@ -19,7 +19,6 @@ FROM scratch
 COPY --from=server-builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=server-builder /etc/localtime /etc/localtime
 COPY --from=server-builder /journal /journal
-COPY migrations /migrations
 ENTRYPOINT ["/journal"]
 EXPOSE 9000 # grpc
 EXPOSE 7000 # health
