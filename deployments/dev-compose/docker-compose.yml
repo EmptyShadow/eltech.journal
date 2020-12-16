@@ -4,7 +4,7 @@ services:
   journal:
     build:
       context: ../../
-      dockerfile: Dockerfile
+      dockerfile: ../container/Dockerfile-journal
     restart: on-failure
     env_file:
       - ./configs/journal.env
@@ -17,13 +17,14 @@ services:
       - postgres
   postgres:
     image: postgres:9.6.17-alpine
-    restart: on-failure
+    restart: "no"
     env_file:
       - ./configs/postgres.env
     volumes:
       - postgres-data:/data/postgres
+      - ./pg-init:/docker-entrypoint-initdb.d
     ports:
-      - "5432"
+      - "5432:5432"
   pgadmin:
     image: dpage/pgadmin4:4.26
     user: "$UID:$GID"
@@ -32,7 +33,7 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
     ports:
-      - "80"
+      - "5480:80"
     depends_on:
       - postgres
 

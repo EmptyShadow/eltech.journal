@@ -9,7 +9,7 @@ import "google/protobuf/timestamp.proto";
 message FullName {
   // Имя.
   string FirstName = 1;
-  // Отчество.
+  // Отчество, не обязательное поле.
   string MiddleName = 2;
   // Фамилия.
   string LastName = 3;
