@@ -7,6 +7,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/jackc/pgx/v4 v4.10.0
 	github.com/lib/pq v1.8.0
+	github.com/stretchr/testify v1.5.1
 	go.uber.org/zap v1.16.0
 	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208
 	google.golang.org/grpc v1.33.1
