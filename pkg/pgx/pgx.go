@@ -31,7 +31,7 @@ func OpenPool(connString string, appName string) *pgxpool.Pool {
 
 	conf.MaxConnIdleTime = config.Get(envMaxConnIdleTime).Duration(0)
 	conf.MaxConnLifetime = config.Get(envMaxConnLifetime).Duration(0)
-	conf.MaxConns = int32(config.Get(envMaxConns).Int(0))
+	conf.MaxConns = int32(config.Get(envMaxConns).Int(1))
 	conf.MinConns = int32(config.Get(envMinConns).Int(0))
 	conf.ConnConfig.RuntimeParams = map[string]string{
 		"application_name": appName,
