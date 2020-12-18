@@ -27,8 +27,7 @@ VALUES ($1, $2, $3, $4, $5)
 RETURNING id, created_at;
 `
 
-func (r *Users) Save(ctx context.Context, email string, pwd []byte,
-	fn *domain.FullName) (*domain.User, error) {
+func (r *Users) Save(ctx context.Context, email string, pwd []byte, fn *domain.FullName) (*domain.User, error) {
 	var (
 		id        string
 		createdAt time.Time
@@ -38,7 +37,7 @@ func (r *Users) Save(ctx context.Context, email string, pwd []byte,
 		QueryRow(ctx, querySaveUser, email, pwd, fn.FirstName, fn.MiddleName, fn.LastName).
 		Scan(&id, &createdAt)
 	if err != nil {
-		return nil, fmt.Errorf("failed insert user: %w", err)
+		return nil, fmt.Errorf("failed insert user: %w", ConvertConstraintErr(err))
 	}
 
 	user := new(domain.User)

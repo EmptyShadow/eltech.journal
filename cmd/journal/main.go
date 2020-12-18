@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"github.com/EmptyShadow/eltech.journal/pkg/crypto"
+	"golang.org/x/crypto/bcrypt"
 
 	apiusers "github.com/EmptyShadow/eltech.journal/api/users"
 	"github.com/EmptyShadow/eltech.journal/internal/pg"
@@ -41,14 +43,18 @@ func main() {
 
 	l.Info("init adapters")
 
+	pwdCryptor := crypto.NewPwdCryptor(bcrypt.DefaultCost)
+
 	usersRepo := pg.NewUsers(pgdb)
+
+	l.Info("init endpoints")
 
 	grpcServer := grpc.NewServer(grpc.ServingAddr(config.Get(envGRPCAPIAddr).String(apiGRPCAddr)))
 	wrappedGrpc := grpcweb.WrapServer(grpcServer.Server)
 
 	l.Info("registration services")
 
-	apiusers.RegisterUsersServer(grpcServer.Server, users.NewService(usersRepo))
+	apiusers.RegisterUsersServer(grpcServer.Server, users.NewService(usersRepo, pwdCryptor))
 
 	l.Info("start app")
 	defer l.Info("stop app")

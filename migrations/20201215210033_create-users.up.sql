@@ -15,7 +15,10 @@ CREATE TABLE IF NOT EXISTS users
 
     created_at  timestamp with time zone NOT NULL DEFAULT now(),
     updated_at  timestamp with time zone,
-    deleted_at  timestamp with time zone
+    deleted_at  timestamp with time zone,
+
+    CONSTRAINT users_first_name_non_empty CHECK (length(first_name) > 0),
+    CONSTRAINT users_last_name_non_empty CHECK (length(last_name) > 0)
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS users_email_idx ON users (email);

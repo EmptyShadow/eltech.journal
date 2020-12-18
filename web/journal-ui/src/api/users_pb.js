@@ -92,7 +92,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.toObject = functio
   var f, obj = {
     email: jspb.Message.getFieldWithDefault(msg, 1, ""),
     fullname: (f = msg.getFullname()) && github_com_EmptyShadow_eltech_journal_api_domain_pb.FullName.toObject(includeInstance, f),
-    sha1hashpwd: jspb.Message.getFieldWithDefault(msg, 3, "")
+    sha1hashpwd: msg.getSha1hashpwd_asB64()
   };
 
   if (includeInstance) {
@@ -139,7 +139,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.deserializeBinaryF
       msg.setFullname(value);
       break;
     case 3:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
       msg.setSha1hashpwd(value);
       break;
     default:
@@ -186,9 +186,9 @@ proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.serializeBinaryToW
       github_com_EmptyShadow_eltech_journal_api_domain_pb.FullName.serializeBinaryToWriter
     );
   }
-  f = message.getSha1hashpwd();
+  f = message.getSha1hashpwd_asU8();
   if (f.length > 0) {
-    writer.writeString(
+    writer.writeBytes(
       3,
       f
     );
@@ -252,7 +252,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.hasFulln
 
 
 /**
- * optional string SHA1HashPWD = 3;
+ * optional bytes SHA1HashPWD = 3;
  * @return {string}
  */
 proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.getSha1hashpwd = function() {
@@ -261,11 +261,35 @@ proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.getSha1h
 
 
 /**
- * @param {string} value
+ * optional bytes SHA1HashPWD = 3;
+ * This is a type-conversion wrapper around `getSha1hashpwd()`
+ * @return {string}
+ */
+proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.getSha1hashpwd_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getSha1hashpwd()));
+};
+
+
+/**
+ * optional bytes SHA1HashPWD = 3;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getSha1hashpwd()`
+ * @return {!Uint8Array}
+ */
+proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.getSha1hashpwd_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getSha1hashpwd()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
  * @return {!proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest} returns this
  */
 proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.setSha1hashpwd = function(value) {
-  return jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 

@@ -30,7 +30,7 @@
 | ----- | ---- | ----- | ----------- |
 | Email | [string](#string) |  |  |
 | FullName | [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName) |  |  |
-| SHA1HashPWD | [string](#string) |  |  |
+| SHA1HashPWD | [bytes](#bytes) |  |  |
 
 
 

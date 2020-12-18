@@ -8,7 +8,7 @@ import "github.com/EmptyShadow/eltech.journal/api/domain.proto";
 message CreateRequest {
   string Email = 1;
   github.com.EmptyShadow.eltech.journal.api.FullName FullName = 2;
-  string SHA1HashPWD = 3;
+  bytes SHA1HashPWD = 3;
 }
 
 message CreateResponse {
