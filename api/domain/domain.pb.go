@@ -4,8 +4,10 @@
 package domain
 
 import (
+	bytes "bytes"
 	fmt "fmt"
 	proto "github.com/gogo/protobuf/proto"
+	types "github.com/gogo/protobuf/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -24,21 +26,27 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type Test struct {
-	Event string `protobuf:"bytes,1,opt,name=Event,proto3" json:"Event,omitempty"`
+// Полное имя пользователя.
+type FullName struct {
+	// Имя.
+	FirstName string `protobuf:"bytes,1,opt,name=FirstName,proto3" json:"FirstName,omitempty"`
+	// Отчество, не обязательное поле.
+	MiddleName string `protobuf:"bytes,2,opt,name=MiddleName,proto3" json:"MiddleName,omitempty"`
+	// Фамилия.
+	LastName string `protobuf:"bytes,3,opt,name=LastName,proto3" json:"LastName,omitempty"`
 }
 
-func (m *Test) Reset()      { *m = Test{} }
-func (*Test) ProtoMessage() {}
-func (*Test) Descriptor() ([]byte, []int) {
+func (m *FullName) Reset()      { *m = FullName{} }
+func (*FullName) ProtoMessage() {}
+func (*FullName) Descriptor() ([]byte, []int) {
 	return fileDescriptor_73e6234e76dbdb84, []int{0}
 }
-func (m *Test) XXX_Unmarshal(b []byte) error {
+func (m *FullName) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *Test) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *FullName) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_Test.Marshal(b, m, deterministic)
+		return xxx_messageInfo_FullName.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -48,55 +56,179 @@ func (m *Test) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 		return b[:n], nil
 	}
 }
-func (m *Test) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Test.Merge(m, src)
+func (m *FullName) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_FullName.Merge(m, src)
 }
-func (m *Test) XXX_Size() int {
+func (m *FullName) XXX_Size() int {
 	return m.Size()
 }
-func (m *Test) XXX_DiscardUnknown() {
-	xxx_messageInfo_Test.DiscardUnknown(m)
+func (m *FullName) XXX_DiscardUnknown() {
+	xxx_messageInfo_FullName.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Test proto.InternalMessageInfo
+var xxx_messageInfo_FullName proto.InternalMessageInfo
 
-func (m *Test) GetEvent() string {
+func (m *FullName) GetFirstName() string {
 	if m != nil {
-		return m.Event
+		return m.FirstName
 	}
 	return ""
 }
 
+func (m *FullName) GetMiddleName() string {
+	if m != nil {
+		return m.MiddleName
+	}
+	return ""
+}
+
+func (m *FullName) GetLastName() string {
+	if m != nil {
+		return m.LastName
+	}
+	return ""
+}
+
+// Пользователь.
+type User struct {
+	// Идентификатор в формате UUID.
+	ID string `protobuf:"bytes,1,opt,name=ID,proto3" json:"ID,omitempty"`
+	// Электронная почта.
+	Email string `protobuf:"bytes,2,opt,name=Email,proto3" json:"Email,omitempty"`
+	Pwd   []byte `protobuf:"bytes,3,opt,name=Pwd,proto3" json:"Pwd,omitempty"`
+	// Полное имя.
+	FullName *FullName `protobuf:"bytes,4,opt,name=FullName,proto3" json:"FullName,omitempty"`
+	// Дата создания записи.
+	CreatedAt *types.Timestamp `protobuf:"bytes,5,opt,name=CreatedAt,proto3" json:"CreatedAt,omitempty"`
+	// Дата обновление полей записи.
+	UpdatedAt *types.Timestamp `protobuf:"bytes,6,opt,name=UpdatedAt,proto3" json:"UpdatedAt,omitempty"`
+	// Дата удаления записи.
+	DeletedAt *types.Timestamp `protobuf:"bytes,7,opt,name=DeletedAt,proto3" json:"DeletedAt,omitempty"`
+}
+
+func (m *User) Reset()      { *m = User{} }
+func (*User) ProtoMessage() {}
+func (*User) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73e6234e76dbdb84, []int{1}
+}
+func (m *User) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *User) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_User.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *User) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_User.Merge(m, src)
+}
+func (m *User) XXX_Size() int {
+	return m.Size()
+}
+func (m *User) XXX_DiscardUnknown() {
+	xxx_messageInfo_User.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_User proto.InternalMessageInfo
+
+func (m *User) GetID() string {
+	if m != nil {
+		return m.ID
+	}
+	return ""
+}
+
+func (m *User) GetEmail() string {
+	if m != nil {
+		return m.Email
+	}
+	return ""
+}
+
+func (m *User) GetPwd() []byte {
+	if m != nil {
+		return m.Pwd
+	}
+	return nil
+}
+
+func (m *User) GetFullName() *FullName {
+	if m != nil {
+		return m.FullName
+	}
+	return nil
+}
+
+func (m *User) GetCreatedAt() *types.Timestamp {
+	if m != nil {
+		return m.CreatedAt
+	}
+	return nil
+}
+
+func (m *User) GetUpdatedAt() *types.Timestamp {
+	if m != nil {
+		return m.UpdatedAt
+	}
+	return nil
+}
+
+func (m *User) GetDeletedAt() *types.Timestamp {
+	if m != nil {
+		return m.DeletedAt
+	}
+	return nil
+}
+
 func init() {
-	proto.RegisterType((*Test)(nil), "github.com.EmptyShadow.eltech.journal.api.Test")
+	proto.RegisterType((*FullName)(nil), "github.com.EmptyShadow.eltech.journal.api.FullName")
+	proto.RegisterType((*User)(nil), "github.com.EmptyShadow.eltech.journal.api.User")
 }
 
 func init() { proto.RegisterFile("domain.proto", fileDescriptor_73e6234e76dbdb84) }
 
 var fileDescriptor_73e6234e76dbdb84 = []byte{
-	// 187 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x49, 0xc9, 0xcf, 0x4d,
-	0xcc, 0xcc, 0xd3, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xd2, 0x4c, 0xcf, 0x2c, 0xc9, 0x28, 0x4d,
-	0xd2, 0x4b, 0xce, 0xcf, 0xd5, 0x73, 0xcd, 0x2d, 0x28, 0xa9, 0x0c, 0xce, 0x48, 0x4c, 0xc9, 0x2f,
-	0xd7, 0x4b, 0xcd, 0x29, 0x49, 0x4d, 0xce, 0xd0, 0xcb, 0xca, 0x2f, 0x2d, 0xca, 0x4b, 0xcc, 0xd1,
-	0x4b, 0x2c, 0xc8, 0x54, 0x92, 0xe1, 0x62, 0x09, 0x49, 0x2d, 0x2e, 0x11, 0x12, 0xe1, 0x62, 0x75,
-	0x2d, 0x4b, 0xcd, 0x2b, 0x91, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x82, 0x70, 0x9c, 0xd2, 0x2e,
-	0x3c, 0x94, 0x63, 0xb8, 0xf1, 0x50, 0x8e, 0xe1, 0xc3, 0x43, 0x39, 0xc6, 0x86, 0x47, 0x72, 0x8c,
-	0x2b, 0x1e, 0xc9, 0x31, 0x9e, 0x78, 0x24, 0xc7, 0x78, 0xe1, 0x91, 0x1c, 0xe3, 0x83, 0x47, 0x72,
-	0x8c, 0x2f, 0x1e, 0xc9, 0x31, 0x7c, 0x78, 0x24, 0xc7, 0x38, 0xe1, 0xb1, 0x1c, 0xc3, 0x85, 0xc7,
-	0x72, 0x0c, 0x37, 0x1e, 0xcb, 0x31, 0x44, 0x19, 0x20, 0xac, 0xd7, 0x47, 0xb2, 0x5e, 0x1f, 0xd5,
-	0x7a, 0xfd, 0xc4, 0x82, 0x4c, 0x7d, 0x88, 0xb3, 0x93, 0xd8, 0xc0, 0xee, 0x36, 0x06, 0x04, 0x00,
-	0x00, 0xff, 0xff, 0x60, 0x82, 0x8d, 0x12, 0xc7, 0x00, 0x00, 0x00,
+	// 364 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x92, 0x3d, 0x4f, 0xc2, 0x40,
+	0x18, 0xc7, 0x7b, 0xe5, 0x45, 0x38, 0x89, 0x31, 0x17, 0x07, 0x42, 0xcc, 0x49, 0x98, 0x70, 0xb9,
+	0x1a, 0x59, 0x5c, 0x55, 0x20, 0x21, 0xf1, 0x2d, 0x55, 0x16, 0xb7, 0x83, 0x3b, 0xe0, 0xcc, 0x95,
+	0x6b, 0xca, 0x35, 0xc4, 0xcd, 0x8f, 0xe0, 0xc7, 0xf0, 0x4b, 0xb8, 0x3b, 0x32, 0x32, 0x4a, 0x59,
+	0x1c, 0xf9, 0x08, 0xa6, 0x2f, 0x50, 0x9c, 0x70, 0xeb, 0xf3, 0xf2, 0xfb, 0xe7, 0xe9, 0x2f, 0x07,
+	0x4b, 0x4c, 0x39, 0x54, 0x8c, 0x89, 0xeb, 0x29, 0xad, 0xd0, 0xe9, 0x50, 0xe8, 0x91, 0xdf, 0x23,
+	0x7d, 0xe5, 0x90, 0x96, 0xe3, 0xea, 0xd7, 0xc7, 0x11, 0x65, 0x6a, 0x4a, 0xb8, 0xd4, 0xbc, 0x3f,
+	0x22, 0x2f, 0xca, 0xf7, 0xc6, 0x54, 0x12, 0xea, 0x8a, 0xca, 0xc9, 0x50, 0xa9, 0xa1, 0xe4, 0x56,
+	0x04, 0xf6, 0xfc, 0x81, 0xa5, 0x85, 0xc3, 0x27, 0x9a, 0x3a, 0x6e, 0x9c, 0x55, 0x63, 0xb0, 0xd0,
+	0xf6, 0xa5, 0xbc, 0xa3, 0x0e, 0x47, 0xc7, 0xb0, 0xd8, 0x16, 0xde, 0x44, 0x87, 0x45, 0x19, 0x54,
+	0x41, 0xbd, 0x68, 0xa7, 0x0d, 0x84, 0x21, 0xbc, 0x15, 0x8c, 0x49, 0x1e, 0x8d, 0xcd, 0x68, 0xbc,
+	0xd5, 0x41, 0x15, 0x58, 0xb8, 0xa1, 0x09, 0x9c, 0x89, 0xa6, 0x9b, 0xba, 0xf6, 0x69, 0xc2, 0x6c,
+	0x77, 0xc2, 0x3d, 0x74, 0x00, 0xcd, 0x4e, 0x33, 0xc9, 0x36, 0x3b, 0x4d, 0x74, 0x04, 0x73, 0x2d,
+	0x87, 0x0a, 0x99, 0xe4, 0xc5, 0x05, 0x3a, 0x84, 0x99, 0x87, 0x29, 0x8b, 0x52, 0x4a, 0x76, 0xf8,
+	0x89, 0xee, 0xd3, 0x33, 0xcb, 0xd9, 0x2a, 0xa8, 0xef, 0x9f, 0x37, 0xc8, 0xbf, 0x2d, 0x90, 0x35,
+	0x6a, 0xa7, 0xff, 0x7a, 0x01, 0x8b, 0xd7, 0x1e, 0xa7, 0x9a, 0xb3, 0x4b, 0x5d, 0xce, 0x45, 0x89,
+	0x15, 0x12, 0xcb, 0x22, 0x6b, 0x59, 0xe4, 0x69, 0x2d, 0xcb, 0x4e, 0x97, 0x43, 0xb2, 0xeb, 0xb2,
+	0x84, 0xcc, 0xef, 0x26, 0x37, 0xcb, 0x21, 0xd9, 0xe4, 0x92, 0xc7, 0xe4, 0xde, 0x6e, 0x72, 0xb3,
+	0x7c, 0x35, 0x98, 0x2d, 0xb0, 0x31, 0x5f, 0x60, 0x63, 0xb5, 0xc0, 0xe0, 0x2d, 0xc0, 0xe0, 0x23,
+	0xc0, 0xe0, 0x2b, 0xc0, 0x60, 0x16, 0x60, 0xf0, 0x1d, 0x60, 0xf0, 0x13, 0x60, 0x63, 0x15, 0x60,
+	0xf0, 0xbe, 0xc4, 0xc6, 0x6c, 0x89, 0x8d, 0xf9, 0x12, 0x1b, 0xcf, 0x67, 0xa9, 0x21, 0x6b, 0xcb,
+	0x90, 0xf5, 0xd7, 0x90, 0x45, 0x5d, 0x61, 0xc5, 0xef, 0xab, 0x97, 0x8f, 0xce, 0x68, 0xfc, 0x06,
+	0x00, 0x00, 0xff, 0xff, 0x11, 0xfb, 0x8e, 0xce, 0x70, 0x02, 0x00, 0x00,
 }
 
-func (this *Test) Equal(that interface{}) bool {
+func (this *FullName) Equal(that interface{}) bool {
 	if that == nil {
 		return this == nil
 	}
 
-	that1, ok := that.(*Test)
+	that1, ok := that.(*FullName)
 	if !ok {
-		that2, ok := that.(Test)
+		that2, ok := that.(FullName)
 		if ok {
 			that1 = &that2
 		} else {
@@ -108,18 +240,92 @@ func (this *Test) Equal(that interface{}) bool {
 	} else if this == nil {
 		return false
 	}
-	if this.Event != that1.Event {
+	if this.FirstName != that1.FirstName {
+		return false
+	}
+	if this.MiddleName != that1.MiddleName {
+		return false
+	}
+	if this.LastName != that1.LastName {
 		return false
 	}
 	return true
 }
-func (this *Test) GoString() string {
+func (this *User) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*User)
+	if !ok {
+		that2, ok := that.(User)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.ID != that1.ID {
+		return false
+	}
+	if this.Email != that1.Email {
+		return false
+	}
+	if !bytes.Equal(this.Pwd, that1.Pwd) {
+		return false
+	}
+	if !this.FullName.Equal(that1.FullName) {
+		return false
+	}
+	if !this.CreatedAt.Equal(that1.CreatedAt) {
+		return false
+	}
+	if !this.UpdatedAt.Equal(that1.UpdatedAt) {
+		return false
+	}
+	if !this.DeletedAt.Equal(that1.DeletedAt) {
+		return false
+	}
+	return true
+}
+func (this *FullName) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := make([]string, 0, 5)
-	s = append(s, "&domain.Test{")
-	s = append(s, "Event: "+fmt.Sprintf("%#v", this.Event)+",\n")
+	s := make([]string, 0, 7)
+	s = append(s, "&domain.FullName{")
+	s = append(s, "FirstName: "+fmt.Sprintf("%#v", this.FirstName)+",\n")
+	s = append(s, "MiddleName: "+fmt.Sprintf("%#v", this.MiddleName)+",\n")
+	s = append(s, "LastName: "+fmt.Sprintf("%#v", this.LastName)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *User) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 11)
+	s = append(s, "&domain.User{")
+	s = append(s, "ID: "+fmt.Sprintf("%#v", this.ID)+",\n")
+	s = append(s, "Email: "+fmt.Sprintf("%#v", this.Email)+",\n")
+	s = append(s, "Pwd: "+fmt.Sprintf("%#v", this.Pwd)+",\n")
+	if this.FullName != nil {
+		s = append(s, "FullName: "+fmt.Sprintf("%#v", this.FullName)+",\n")
+	}
+	if this.CreatedAt != nil {
+		s = append(s, "CreatedAt: "+fmt.Sprintf("%#v", this.CreatedAt)+",\n")
+	}
+	if this.UpdatedAt != nil {
+		s = append(s, "UpdatedAt: "+fmt.Sprintf("%#v", this.UpdatedAt)+",\n")
+	}
+	if this.DeletedAt != nil {
+		s = append(s, "DeletedAt: "+fmt.Sprintf("%#v", this.DeletedAt)+",\n")
+	}
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -131,7 +337,7 @@ func valueToGoStringDomain(v interface{}, typ string) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("func(v %v) *%v { return &v } ( %#v )", typ, typ, pv)
 }
-func (m *Test) Marshal() (dAtA []byte, err error) {
+func (m *FullName) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -141,20 +347,126 @@ func (m *Test) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *Test) MarshalTo(dAtA []byte) (int, error) {
+func (m *FullName) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *Test) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *FullName) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
-	if len(m.Event) > 0 {
-		i -= len(m.Event)
-		copy(dAtA[i:], m.Event)
-		i = encodeVarintDomain(dAtA, i, uint64(len(m.Event)))
+	if len(m.LastName) > 0 {
+		i -= len(m.LastName)
+		copy(dAtA[i:], m.LastName)
+		i = encodeVarintDomain(dAtA, i, uint64(len(m.LastName)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.MiddleName) > 0 {
+		i -= len(m.MiddleName)
+		copy(dAtA[i:], m.MiddleName)
+		i = encodeVarintDomain(dAtA, i, uint64(len(m.MiddleName)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.FirstName) > 0 {
+		i -= len(m.FirstName)
+		copy(dAtA[i:], m.FirstName)
+		i = encodeVarintDomain(dAtA, i, uint64(len(m.FirstName)))
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *User) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *User) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *User) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.DeletedAt != nil {
+		{
+			size, err := m.DeletedAt.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintDomain(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x3a
+	}
+	if m.UpdatedAt != nil {
+		{
+			size, err := m.UpdatedAt.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintDomain(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.CreatedAt != nil {
+		{
+			size, err := m.CreatedAt.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintDomain(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x2a
+	}
+	if m.FullName != nil {
+		{
+			size, err := m.FullName.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintDomain(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.Pwd) > 0 {
+		i -= len(m.Pwd)
+		copy(dAtA[i:], m.Pwd)
+		i = encodeVarintDomain(dAtA, i, uint64(len(m.Pwd)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Email) > 0 {
+		i -= len(m.Email)
+		copy(dAtA[i:], m.Email)
+		i = encodeVarintDomain(dAtA, i, uint64(len(m.Email)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.ID) > 0 {
+		i -= len(m.ID)
+		copy(dAtA[i:], m.ID)
+		i = encodeVarintDomain(dAtA, i, uint64(len(m.ID)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -172,14 +484,59 @@ func encodeVarintDomain(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *Test) Size() (n int) {
+func (m *FullName) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.Event)
+	l = len(m.FirstName)
 	if l > 0 {
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	l = len(m.MiddleName)
+	if l > 0 {
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	l = len(m.LastName)
+	if l > 0 {
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	return n
+}
+
+func (m *User) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.ID)
+	if l > 0 {
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	l = len(m.Email)
+	if l > 0 {
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	l = len(m.Pwd)
+	if l > 0 {
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	if m.FullName != nil {
+		l = m.FullName.Size()
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	if m.CreatedAt != nil {
+		l = m.CreatedAt.Size()
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	if m.UpdatedAt != nil {
+		l = m.UpdatedAt.Size()
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	if m.DeletedAt != nil {
+		l = m.DeletedAt.Size()
 		n += 1 + l + sovDomain(uint64(l))
 	}
 	return n
@@ -191,12 +548,30 @@ func sovDomain(x uint64) (n int) {
 func sozDomain(x uint64) (n int) {
 	return sovDomain(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (this *Test) String() string {
+func (this *FullName) String() string {
 	if this == nil {
 		return "nil"
 	}
-	s := strings.Join([]string{`&Test{`,
-		`Event:` + fmt.Sprintf("%v", this.Event) + `,`,
+	s := strings.Join([]string{`&FullName{`,
+		`FirstName:` + fmt.Sprintf("%v", this.FirstName) + `,`,
+		`MiddleName:` + fmt.Sprintf("%v", this.MiddleName) + `,`,
+		`LastName:` + fmt.Sprintf("%v", this.LastName) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *User) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&User{`,
+		`ID:` + fmt.Sprintf("%v", this.ID) + `,`,
+		`Email:` + fmt.Sprintf("%v", this.Email) + `,`,
+		`Pwd:` + fmt.Sprintf("%v", this.Pwd) + `,`,
+		`FullName:` + strings.Replace(this.FullName.String(), "FullName", "FullName", 1) + `,`,
+		`CreatedAt:` + strings.Replace(fmt.Sprintf("%v", this.CreatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
+		`UpdatedAt:` + strings.Replace(fmt.Sprintf("%v", this.UpdatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
+		`DeletedAt:` + strings.Replace(fmt.Sprintf("%v", this.DeletedAt), "Timestamp", "types.Timestamp", 1) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -209,7 +584,7 @@ func valueToStringDomain(v interface{}) string {
 	pv := reflect.Indirect(rv).Interface()
 	return fmt.Sprintf("*%v", pv)
 }
-func (m *Test) Unmarshal(dAtA []byte) error {
+func (m *FullName) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -232,15 +607,15 @@ func (m *Test) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: Test: wiretype end group for non-group")
+			return fmt.Errorf("proto: FullName: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: Test: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: FullName: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Event", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field FirstName", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -268,7 +643,366 @@ func (m *Test) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Event = string(dAtA[iNdEx:postIndex])
+			m.FirstName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MiddleName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.MiddleName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field LastName", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.LastName = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDomain(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *User) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDomain
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: User: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: User: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Email", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Email = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Pwd", wireType)
+			}
+			var byteLen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				byteLen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if byteLen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + byteLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Pwd = append(m.Pwd[:0], dAtA[iNdEx:postIndex]...)
+			if m.Pwd == nil {
+				m.Pwd = []byte{}
+			}
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field FullName", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.FullName == nil {
+				m.FullName = &FullName{}
+			}
+			if err := m.FullName.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CreatedAt == nil {
+				m.CreatedAt = &types.Timestamp{}
+			}
+			if err := m.CreatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.UpdatedAt == nil {
+				m.UpdatedAt = &types.Timestamp{}
+			}
+			if err := m.UpdatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field DeletedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.DeletedAt == nil {
+				m.DeletedAt = &types.Timestamp{}
+			}
+			if err := m.DeletedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex

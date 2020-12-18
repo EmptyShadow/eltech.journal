@@ -4,7 +4,8 @@
 ## Table of Contents
 
 - [domain.proto](#domain.proto)
-    - [Test](#github.com.EmptyShadow.eltech.journal.api.Test)
+    - [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName)
+    - [User](#github.com.EmptyShadow.eltech.journal.api.User)
   
 - [Scalar Value Types](#scalar-value-types)
 
@@ -17,15 +18,38 @@
 
 
 
-<a name="github.com.EmptyShadow.eltech.journal.api.Test"></a>
+<a name="github.com.EmptyShadow.eltech.journal.api.FullName"></a>
 
-### Test
-
+### FullName
+Полное имя пользователя.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Event | [string](#string) |  |  |
+| FirstName | [string](#string) |  | Имя. |
+| MiddleName | [string](#string) |  | Отчество, не обязательное поле. |
+| LastName | [string](#string) |  | Фамилия. |
+
+
+
+
+
+
+<a name="github.com.EmptyShadow.eltech.journal.api.User"></a>
+
+### User
+Пользователь.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| ID | [string](#string) |  | Идентификатор в формате UUID. |
+| Email | [string](#string) |  | Электронная почта. |
+| Pwd | [bytes](#bytes) |  |  |
+| FullName | [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName) |  | Полное имя. |
+| CreatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата создания записи. |
+| UpdatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата обновление полей записи. |
+| DeletedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата удаления записи. |
 
 
 

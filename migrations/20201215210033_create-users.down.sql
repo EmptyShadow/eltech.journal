@@ -1,0 +1,8 @@
+BEGIN TRANSACTION;
+DROP INDEX IF EXISTS users_email_idx;
+DROP INDEX IF EXISTS users_first_name_idx;
+DROP INDEX IF EXISTS users_middle_name_idx;
+DROP INDEX IF EXISTS users_last_name_idx;
+DROP TABLE IF EXISTS users;
+DROP EXTENSION IF EXISTS "uuid-ossp";
+COMMIT TRANSACTION;
