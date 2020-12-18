@@ -18,4 +18,4 @@ COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certifi
 COPY --from=builder /etc/localtime /etc/localtime
 COPY --from=builder /journal /journal
 ENTRYPOINT ["/journal"]
-EXPOSE 9000 7010
+EXPOSE 8000 9000 7010
