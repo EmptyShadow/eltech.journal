@@ -27,7 +27,7 @@
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | FirstName | [string](#string) |  | Имя. |
-| MiddleName | [string](#string) |  | Отчество. |
+| MiddleName | [string](#string) |  | Отчество, не обязательное поле. |
 | LastName | [string](#string) |  | Фамилия. |
 
 
@@ -45,6 +45,7 @@
 | ----- | ---- | ----- | ----------- |
 | ID | [string](#string) |  | Идентификатор в формате UUID. |
 | Email | [string](#string) |  | Электронная почта. |
+| Pwd | [bytes](#bytes) |  |  |
 | FullName | [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName) |  | Полное имя. |
 | CreatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата создания записи. |
 | UpdatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата обновление полей записи. |

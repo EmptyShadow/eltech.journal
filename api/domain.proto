@@ -21,12 +21,13 @@ message User {
   string ID = 1;
   // Электронная почта.
   string Email = 2;
+  bytes Pwd = 3;
   // Полное имя.
-  FullName FullName = 3;
+  FullName FullName = 4;
   // Дата создания записи.
-  google.protobuf.Timestamp CreatedAt = 4;
+  google.protobuf.Timestamp CreatedAt = 5;
   // Дата обновление полей записи.
-  google.protobuf.Timestamp UpdatedAt = 5;
+  google.protobuf.Timestamp UpdatedAt = 6;
   // Дата удаления записи.
-  google.protobuf.Timestamp DeletedAt = 6;
+  google.protobuf.Timestamp DeletedAt = 7;
 }

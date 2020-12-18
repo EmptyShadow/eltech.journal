@@ -282,6 +282,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.toObject = function(include
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     email: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    pwd: msg.getPwd_asB64(),
     fullname: (f = msg.getFullname()) && proto.github.com.EmptyShadow.eltech.journal.api.FullName.toObject(includeInstance, f),
     createdat: (f = msg.getCreatedat()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
     updatedat: (f = msg.getUpdatedat()) && google_protobuf_timestamp_pb.Timestamp.toObject(includeInstance, f),
@@ -331,21 +332,25 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.deserializeBinaryFromReader
       msg.setEmail(value);
       break;
     case 3:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setPwd(value);
+      break;
+    case 4:
       var value = new proto.github.com.EmptyShadow.eltech.journal.api.FullName;
       reader.readMessage(value,proto.github.com.EmptyShadow.eltech.journal.api.FullName.deserializeBinaryFromReader);
       msg.setFullname(value);
       break;
-    case 4:
+    case 5:
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setCreatedat(value);
       break;
-    case 5:
+    case 6:
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setUpdatedat(value);
       break;
-    case 6:
+    case 7:
       var value = new google_protobuf_timestamp_pb.Timestamp;
       reader.readMessage(value,google_protobuf_timestamp_pb.Timestamp.deserializeBinaryFromReader);
       msg.setDeletedat(value);
@@ -393,10 +398,17 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.serializeBinaryToWriter = f
       f
     );
   }
+  f = message.getPwd_asU8();
+  if (f.length > 0) {
+    writer.writeBytes(
+      3,
+      f
+    );
+  }
   f = message.getFullname();
   if (f != null) {
     writer.writeMessage(
-      3,
+      4,
       f,
       proto.github.com.EmptyShadow.eltech.journal.api.FullName.serializeBinaryToWriter
     );
@@ -404,7 +416,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.serializeBinaryToWriter = f
   f = message.getCreatedat();
   if (f != null) {
     writer.writeMessage(
-      4,
+      5,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
@@ -412,7 +424,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.serializeBinaryToWriter = f
   f = message.getUpdatedat();
   if (f != null) {
     writer.writeMessage(
-      5,
+      6,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
@@ -420,7 +432,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.serializeBinaryToWriter = f
   f = message.getDeletedat();
   if (f != null) {
     writer.writeMessage(
-      6,
+      7,
       f,
       google_protobuf_timestamp_pb.Timestamp.serializeBinaryToWriter
     );
@@ -465,12 +477,54 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.setEmail = functi
 
 
 /**
- * optional FullName FullName = 3;
+ * optional bytes Pwd = 3;
+ * @return {string}
+ */
+proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getPwd = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * optional bytes Pwd = 3;
+ * This is a type-conversion wrapper around `getPwd()`
+ * @return {string}
+ */
+proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getPwd_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getPwd()));
+};
+
+
+/**
+ * optional bytes Pwd = 3;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getPwd()`
+ * @return {!Uint8Array}
+ */
+proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getPwd_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getPwd()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.github.com.EmptyShadow.eltech.journal.api.User} returns this
+ */
+proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.setPwd = function(value) {
+  return jspb.Message.setProto3BytesField(this, 3, value);
+};
+
+
+/**
+ * optional FullName FullName = 4;
  * @return {?proto.github.com.EmptyShadow.eltech.journal.api.FullName}
  */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getFullname = function() {
   return /** @type{?proto.github.com.EmptyShadow.eltech.journal.api.FullName} */ (
-    jspb.Message.getWrapperField(this, proto.github.com.EmptyShadow.eltech.journal.api.FullName, 3));
+    jspb.Message.getWrapperField(this, proto.github.com.EmptyShadow.eltech.journal.api.FullName, 4));
 };
 
 
@@ -479,7 +533,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getFullname = fun
  * @return {!proto.github.com.EmptyShadow.eltech.journal.api.User} returns this
 */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.setFullname = function(value) {
-  return jspb.Message.setWrapperField(this, 3, value);
+  return jspb.Message.setWrapperField(this, 4, value);
 };
 
 
@@ -497,17 +551,17 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.clearFullname = f
  * @return {boolean}
  */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.hasFullname = function() {
-  return jspb.Message.getField(this, 3) != null;
+  return jspb.Message.getField(this, 4) != null;
 };
 
 
 /**
- * optional google.protobuf.Timestamp CreatedAt = 4;
+ * optional google.protobuf.Timestamp CreatedAt = 5;
  * @return {?proto.google.protobuf.Timestamp}
  */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getCreatedat = function() {
   return /** @type{?proto.google.protobuf.Timestamp} */ (
-    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 4));
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 5));
 };
 
 
@@ -516,7 +570,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getCreatedat = fu
  * @return {!proto.github.com.EmptyShadow.eltech.journal.api.User} returns this
 */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.setCreatedat = function(value) {
-  return jspb.Message.setWrapperField(this, 4, value);
+  return jspb.Message.setWrapperField(this, 5, value);
 };
 
 
@@ -534,17 +588,17 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.clearCreatedat = 
  * @return {boolean}
  */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.hasCreatedat = function() {
-  return jspb.Message.getField(this, 4) != null;
+  return jspb.Message.getField(this, 5) != null;
 };
 
 
 /**
- * optional google.protobuf.Timestamp UpdatedAt = 5;
+ * optional google.protobuf.Timestamp UpdatedAt = 6;
  * @return {?proto.google.protobuf.Timestamp}
  */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getUpdatedat = function() {
   return /** @type{?proto.google.protobuf.Timestamp} */ (
-    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 5));
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 6));
 };
 
 
@@ -553,7 +607,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getUpdatedat = fu
  * @return {!proto.github.com.EmptyShadow.eltech.journal.api.User} returns this
 */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.setUpdatedat = function(value) {
-  return jspb.Message.setWrapperField(this, 5, value);
+  return jspb.Message.setWrapperField(this, 6, value);
 };
 
 
@@ -571,17 +625,17 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.clearUpdatedat = 
  * @return {boolean}
  */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.hasUpdatedat = function() {
-  return jspb.Message.getField(this, 5) != null;
+  return jspb.Message.getField(this, 6) != null;
 };
 
 
 /**
- * optional google.protobuf.Timestamp DeletedAt = 6;
+ * optional google.protobuf.Timestamp DeletedAt = 7;
  * @return {?proto.google.protobuf.Timestamp}
  */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getDeletedat = function() {
   return /** @type{?proto.google.protobuf.Timestamp} */ (
-    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 6));
+    jspb.Message.getWrapperField(this, google_protobuf_timestamp_pb.Timestamp, 7));
 };
 
 
@@ -590,7 +644,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.getDeletedat = fu
  * @return {!proto.github.com.EmptyShadow.eltech.journal.api.User} returns this
 */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.setDeletedat = function(value) {
-  return jspb.Message.setWrapperField(this, 6, value);
+  return jspb.Message.setWrapperField(this, 7, value);
 };
 
 
@@ -608,7 +662,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.clearDeletedat = 
  * @return {boolean}
  */
 proto.github.com.EmptyShadow.eltech.journal.api.User.prototype.hasDeletedat = function() {
-  return jspb.Message.getField(this, 6) != null;
+  return jspb.Message.getField(this, 7) != null;
 };
 
 
