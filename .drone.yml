@@ -33,6 +33,7 @@ steps:
     image: golang:alpine
     commands:
       - sleep 5
+      - ./migrate
       - go test --tags=integration -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
     environment:
       CGO_ENABLED: 0
