@@ -33,12 +33,9 @@ steps:
       - CHANGES=0; [ -z "$(git status --porcelain)" ] || CHANGES=1
       - exit "$CHANGES"
   - name: lint
-    image: golangci/golangci-lint:v1.34.1
+    image: golangci/golangci-lint:v1.33-alpine
     commands:
-      - echo "$GOPATH"
-      - ls /
-      - ls .
-      - GO111MODULE=on golangci-lint run -v
+      - golangci-lint run -v
   - name: build
     image: golang:alpine
     commands:
