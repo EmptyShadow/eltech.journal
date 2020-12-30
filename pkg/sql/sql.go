@@ -6,14 +6,15 @@ import (
 	"strings"
 )
 
-func BuildUpdateSets(sIndex int, indexPrefix string, nameValue ...interface{}) (string, []interface{}) {
+func BuildUpdateSets(sIndex int, indexPrefix string, nameValue ...interface{}) (querySet string,
+	queryValues []interface{}) {
 	var (
 		sets   []string
 		values []interface{}
 	)
 
 	for i := 0; i < len(nameValue); i += 2 {
-		n := nameValue[i].(string)
+		n, _ := nameValue[i].(string)
 		v := nameValue[i+1]
 
 		refV := reflect.ValueOf(v)

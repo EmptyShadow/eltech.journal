@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-	"github.com/EmptyShadow/eltech.journal/pkg/crypto"
-	"golang.org/x/crypto/bcrypt"
 
 	apiusers "github.com/EmptyShadow/eltech.journal/api/users"
 	"github.com/EmptyShadow/eltech.journal/internal/pg"
 	"github.com/EmptyShadow/eltech.journal/internal/users"
 	"github.com/EmptyShadow/eltech.journal/pkg/config"
+	"github.com/EmptyShadow/eltech.journal/pkg/crypto"
 	"github.com/EmptyShadow/eltech.journal/pkg/grpc"
 	"github.com/EmptyShadow/eltech.journal/pkg/http"
 	"github.com/EmptyShadow/eltech.journal/pkg/log"
@@ -17,6 +16,7 @@ import (
 	"github.com/EmptyShadow/eltech.journal/pkg/pprof"
 	"github.com/EmptyShadow/eltech.journal/pkg/shutdown"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (

@@ -29,6 +29,9 @@ linters:
     - gochecknoglobals
     - goerr113
     - godot
+    - exhaustivestruct
+    - nolintlint
+    - wrapcheck
 
 issues:
   exclude-rules:

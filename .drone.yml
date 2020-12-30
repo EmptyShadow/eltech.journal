@@ -35,7 +35,7 @@ steps:
   - name: lint
     image: golangci/golangci-lint:v1.33-alpine
     commands:
-      - golangci-lint run -v
+      - golangci-lint run
   - name: build
     image: golang:alpine
     commands:

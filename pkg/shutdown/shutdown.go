@@ -1,11 +1,14 @@
 package shutdown
 
-import "os"
+import (
+	"errors"
+	"os"
+)
 
 func IsSignalErr(err error) bool {
-	_, isSignal := err.(*Signal)
+	var s *Signal
 
-	return isSignal
+	return errors.As(err, &s)
 }
 
 func PanicIfErr(err error) {
