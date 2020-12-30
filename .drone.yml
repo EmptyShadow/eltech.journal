@@ -56,7 +56,7 @@ steps:
       - build
   - name: postgres-service
     image: postgres:9.6.17-alpine
-    detach: true
+#    detach: true
     environment:
       POSTGRES_DB: testdb
       POSTGRES_USER: testuser
@@ -67,7 +67,7 @@ steps:
   - name: integration-tests
     image: golang:alpine
     commands:
-      - sleep 5
+#      - sleep 5
       - ./migrate up
       - go test --tags=integration -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
     environment:
