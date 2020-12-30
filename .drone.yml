@@ -36,6 +36,8 @@ steps:
     image: golangci/golangci-lint:v1.34.1
     commands:
       - golangci-lint run -v
+    environment:
+      GO111MODULE: on
   - name: build
     image: golang:alpine
     commands:
