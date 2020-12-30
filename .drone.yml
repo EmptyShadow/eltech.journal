@@ -42,12 +42,17 @@ steps:
       - go build ./cmd/migrate
     environment:
       CGO_ENABLED: 0
+    depends_on:
+      - check-go-mod
+      - lint
   - name: unit-tests
     image: golang:alpine
     commands:
       - go test --tags=unit -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
     environment:
       CGO_ENABLED: 0
+    depends_on:
+      - build
   - name: integration-tests
     image: golang:alpine
     commands:
@@ -63,7 +68,8 @@ steps:
       PGPASSWORD: password
       PGSSLMODE: disable
       PG_CONN_STRING: postgres://testuser:password@postgres-service:5432/testdb?sslmode=disable
-
+    depends_on:
+      - build
 #---
 #
 #kind: pipeline
