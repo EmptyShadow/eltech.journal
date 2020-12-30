@@ -1,0 +1,48 @@
+version: '3.4'
+
+services:
+  joutnal-ui:
+    build:
+      context: ../../
+      dockerfile: ../container/ui.Dockerfile
+    restart: on-failure
+    ports:
+      - "80"
+    depends_on:
+      - journal-api
+  journal-api:
+    build:
+      context: ../../
+      dockerfile: deployments/container/journal.Dockerfile
+    restart: on-failure
+    env_file:
+      - ../../configs/api.env
+    ports:
+      - "7010"
+      - "9000"
+      - "8000"
+    depends_on:
+      - postgres
+      - migrate
+  migrate:
+    build:
+      context: ../../
+      dockerfile: deployments/container/migrate.Dockerfile
+    restart: on-failure
+    env_file:
+      - ../../configs/migrate.env
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:9.6.17-alpine
+    restart: "no"
+    env_file:
+      - postgres.env
+    volumes:
+      - postgres-data:/data/postgres
+      - ./pg-init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres-data:

@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+option go_package = "github.com/EmptyShadow/eltech.journal/api/domain";
+package github.com.EmptyShadow.eltech.journal.api;
+
+import "google/protobuf/timestamp.proto";
+
+// Полное имя пользователя.
+message FullName {
+  // Имя.
+  string FirstName = 1;
+  // Отчество, не обязательное поле.
+  string MiddleName = 2;
+  // Фамилия.
+  string LastName = 3;
+}
+
+// Пользователь.
+message User {
+  // Идентификатор в формате UUID.
+  string ID = 1;
+  // Электронная почта.
+  string Email = 2;
+  bytes Pwd = 3;
+  // Полное имя.
+  FullName FullName = 4;
+  // Дата создания записи.
+  google.protobuf.Timestamp CreatedAt = 5;
+  // Дата обновление полей записи.
+  google.protobuf.Timestamp UpdatedAt = 6;
+  // Дата удаления записи.
+  google.protobuf.Timestamp DeletedAt = 7;
+}
