@@ -7,7 +7,8 @@ run:
     - third_party$
     - testdata$
     - examples$
-    - protobuf$
+    - api$
+    - web$
   modules-download-mode: vendor
 
 output:
