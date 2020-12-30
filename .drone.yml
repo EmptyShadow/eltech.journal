@@ -80,7 +80,6 @@ steps:
       PGSSLMODE: disable
       PG_CONN_STRING: postgres://testuser:password@postgres-service:5432/testdb?sslmode=disable
     depends_on:
-      - build
       - postgres-service
 #---
 #
