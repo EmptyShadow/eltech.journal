@@ -1,0 +1,68 @@
+kind: pipeline
+type: docker
+name: backend
+
+steps:
+  - name: check-go-mod
+    image: golang:alpine
+    commands:
+      - go mod tidy
+      - go mod vendor
+      - CHANGES=0; [ -z "$(git status --porcelain)" ] || CHANGES=1
+      - exit($CHANGES)
+  - name: build
+    image: golang:alpine
+    commands:
+      - go build ./cmd/journal
+      - go build ./cmd/migrate
+  - name: unit-tests
+    image: golang:alpine
+    commands:
+      - go test --tags=unit -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
+  - name: integration-tests
+    image: golang:alpine
+    commands:
+      - sleep 5
+      - go test --tags=integration -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
+    environment:
+      PGHOST: postgres-service
+      PGPORT: 5432
+      PGDATABASE: testdb
+      PGUSER: testuser
+      PGPASSWORD: password
+      PGSSLMODE: disable
+
+services:
+  - name: postgres-service
+    image: postgres:9.6.17-alpine
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+when:
+  exclude:
+    - tag
+
+---
+
+kind: pipeline
+type: docker
+name: release
+
+steps:
+  - name: docker-build
+    image: docker
+    commands:
+      - docker login -u $DOCKER_USER -p $DOCKER_PWD
+      - docker build \
+      -   -t "$DOCKER_USER"/eltech.journal-api:latest \
+      -   -t "$DOCKER_USER"/eltech.journal-api:latest \
+      -   -f ./deployments/container/api.Dockerfile .
+      - docker build -t "$DOCKER_USER"/eltech.journal-migrate:latest -f ./deployments/container/migrate.Dockerfile .
+      - docker build -t "$DOCKER_USER"/eltech.journal-ui:latest -f ./deployments/container/ui.Dockerfile .
+
+when:
+  event:
+    - tag
