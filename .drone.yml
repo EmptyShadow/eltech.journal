@@ -12,16 +12,14 @@ trigger:
       - tag
       - pull_request
 
-#services:
-#  - name: postgres-service
-#    image: postgres:9.6.17-alpine
-#    environment:
-#      POSTGRES_DB: testdb
-#      POSTGRES_USER: testuser
-#      POSTGRES_PASSWORD: password
-#      POSTGRES_HOST_AUTH_METHOD: trust
-#    depends_on:
-#      - build
+services:
+  - name: postgres-service
+    image: postgres:9.6.17-alpine
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: trust
 
 steps:
   - name: check-go-mod
@@ -54,20 +52,10 @@ steps:
       CGO_ENABLED: 0
     depends_on:
       - build
-  - name: postgres-service
-    image: postgres:9.6.17-alpine
-#    detach: true
-    environment:
-      POSTGRES_DB: testdb
-      POSTGRES_USER: testuser
-      POSTGRES_PASSWORD: password
-      POSTGRES_HOST_AUTH_METHOD: trust
-    depends_on:
-      - build
   - name: integration-tests
     image: golang:alpine
     commands:
-#      - sleep 5
+      - sleep 5
       - ./migrate up
       - go test --tags=integration -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
     environment:
@@ -80,7 +68,7 @@ steps:
       PGSSLMODE: disable
       PG_CONN_STRING: postgres://testuser:password@postgres-service:5432/testdb?sslmode=disable
     depends_on:
-      - postgres-service
+      - build
 #---
 #
 #kind: pipeline
