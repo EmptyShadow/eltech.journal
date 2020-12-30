@@ -2,6 +2,11 @@ kind: pipeline
 type: docker
 name: backend
 
+when:
+  exclude:
+    - tag
+    - pull_request
+
 steps:
   - name: check-go-mod
     image: golang:alpine
@@ -16,16 +21,21 @@ steps:
     commands:
       - go build ./cmd/journal
       - go build ./cmd/migrate
+    environment:
+      CGO_ENABLED: 0
   - name: unit-tests
     image: golang:alpine
     commands:
       - go test --tags=unit -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
+    environment:
+      CGO_ENABLED: 0
   - name: integration-tests
     image: golang:alpine
     commands:
       - sleep 5
       - go test --tags=integration -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
     environment:
+      CGO_ENABLED: 0
       PGHOST: postgres-service
       PGPORT: 5432
       PGDATABASE: testdb
@@ -42,29 +52,24 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_HOST_AUTH_METHOD: trust
 
-when:
-  exclude:
-    - tag
-    - pull_request
-
----
-
-kind: pipeline
-type: docker
-name: release
-
-steps:
-  - name: docker-build
-    image: docker
-    commands:
-      - docker login -u $DOCKER_USER -p $DOCKER_PWD
-      - docker build \
-      -   -t "$DOCKER_USER"/eltech.journal-api:latest \
-      -   -t "$DOCKER_USER"/eltech.journal-api:latest \
-      -   -f ./deployments/container/api.Dockerfile .
-      - docker build -t "$DOCKER_USER"/eltech.journal-migrate:latest -f ./deployments/container/migrate.Dockerfile .
-      - docker build -t "$DOCKER_USER"/eltech.journal-ui:latest -f ./deployments/container/ui.Dockerfile .
-
-when:
-  event:
-    - tag
+#---
+#
+#kind: pipeline
+#type: docker
+#name: release
+#
+#steps:
+#  - name: docker-build
+#    image: docker
+#    commands:
+#      - docker login -u $DOCKER_USER -p $DOCKER_PWD
+#      - docker build \
+#      -   -t "$DOCKER_USER"/eltech.journal-api:latest \
+#      -   -t "$DOCKER_USER"/eltech.journal-api:latest \
+#      -   -f ./deployments/container/api.Dockerfile .
+#      - docker build -t "$DOCKER_USER"/eltech.journal-migrate:latest -f ./deployments/container/migrate.Dockerfile .
+#      - docker build -t "$DOCKER_USER"/eltech.journal-ui:latest -f ./deployments/container/ui.Dockerfile .
+#
+#when:
+#  event:
+#    - tag
