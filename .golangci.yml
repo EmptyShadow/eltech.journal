@@ -9,7 +9,7 @@ run:
     - examples$
     - api$
     - web$
-  modules-download-mode: vendor
+  modules-download-mode: readonly
 
 output:
   format: tab
