@@ -20,6 +20,8 @@ services:
       POSTGRES_USER: testuser
       POSTGRES_PASSWORD: password
       POSTGRES_HOST_AUTH_METHOD: trust
+    depends_on:
+      - build
 
 steps:
   - name: check-go-mod
