@@ -80,7 +80,6 @@ type: docker
 name: release
 
 trigger:
-  event: [ push, tag ]
   ref: [ refs/heads/feat.*, /refs/tags/* ]
 
 steps:
