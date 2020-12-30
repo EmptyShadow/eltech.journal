@@ -12,16 +12,16 @@ trigger:
       - tag
       - pull_request
 
-services:
-  - name: postgres-service
-    image: postgres:9.6.17-alpine
-    environment:
-      POSTGRES_DB: testdb
-      POSTGRES_USER: testuser
-      POSTGRES_PASSWORD: password
-      POSTGRES_HOST_AUTH_METHOD: trust
-    depends_on:
-      - build
+#services:
+#  - name: postgres-service
+#    image: postgres:9.6.17-alpine
+#    environment:
+#      POSTGRES_DB: testdb
+#      POSTGRES_USER: testuser
+#      POSTGRES_PASSWORD: password
+#      POSTGRES_HOST_AUTH_METHOD: trust
+#    depends_on:
+#      - build
 
 steps:
   - name: check-go-mod
@@ -53,6 +53,16 @@ steps:
       - go test --tags=unit -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
     environment:
       CGO_ENABLED: 0
+    depends_on:
+      - build
+  - name: postgres-service
+    image: postgres:9.6.17-alpine
+    detach: true
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: trust
     depends_on:
       - build
   - name: integration-tests
