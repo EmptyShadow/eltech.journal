@@ -9,7 +9,11 @@ run:
     - examples$
     - api$
     - web$
-  modules-download-mode: readonly
+    - configs$
+    - deployments$
+    - docs$
+    - migrations$
+  modules-download-mode: vendor
 
 output:
   format: tab
