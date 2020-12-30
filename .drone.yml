@@ -6,6 +6,7 @@ steps:
   - name: check-go-mod
     image: golang:alpine
     commands:
+      - apk add git
       - go mod tidy
       - go mod vendor
       - CHANGES=0; [ -z "$(git status --porcelain)" ] || CHANGES=1
@@ -44,6 +45,7 @@ services:
 when:
   exclude:
     - tag
+    - pull_request
 
 ---
 
