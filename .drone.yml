@@ -2,11 +2,6 @@ kind: pipeline
 type: docker
 name: backend
 
-when:
-  exclude:
-    - tag
-    - pull_request
-
 steps:
   - name: check-go-mod
     image: golang:alpine
@@ -16,6 +11,10 @@ steps:
       - go mod vendor
       - CHANGES=0; [ -z "$(git status --porcelain)" ] || CHANGES=1
       - exit "$CHANGES"
+    when:
+      exclude:
+        - tag
+        - pull_request
   - name: build
     image: golang:alpine
     commands:
@@ -23,17 +22,25 @@ steps:
       - go build ./cmd/migrate
     environment:
       CGO_ENABLED: 0
+    when:
+      exclude:
+        - tag
+        - pull_request
   - name: unit-tests
     image: golang:alpine
     commands:
       - go test --tags=unit -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
     environment:
       CGO_ENABLED: 0
+    when:
+      exclude:
+        - tag
+        - pull_request
   - name: integration-tests
     image: golang:alpine
     commands:
       - sleep 5
-      - ./migrate
+      - ./migrate up
       - go test --tags=integration -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
     environment:
       CGO_ENABLED: 0
@@ -43,6 +50,10 @@ steps:
       PGUSER: testuser
       PGPASSWORD: password
       PGSSLMODE: disable
+    when:
+      exclude:
+        - tag
+        - pull_request
 
 services:
   - name: postgres-service
