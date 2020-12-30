@@ -7,7 +7,10 @@ trigger:
     - feat.*
     - fix.*
     - master
+    - main
   event:
+    include:
+      - push
     exclude:
       - tag
       - pull_request
