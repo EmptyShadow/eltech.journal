@@ -10,7 +10,7 @@ steps:
       - go mod tidy
       - go mod vendor
       - CHANGES=0; [ -z "$(git status --porcelain)" ] || CHANGES=1
-      - exit($CHANGES)
+      - exit "$CHANGES"
   - name: build
     image: golang:alpine
     commands:
