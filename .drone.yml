@@ -37,6 +37,7 @@ steps:
     commands:
       - echo "$GOPATH"
       - ls /
+      - ls .
       - GO111MODULE=on golangci-lint run -v
   - name: build
     image: golang:alpine
