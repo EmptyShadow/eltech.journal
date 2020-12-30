@@ -80,7 +80,10 @@ type: docker
 name: release
 
 trigger:
-  ref: [ refs/heads/feat.*, /refs/tags/* ]
+  branch:
+    - feat.add-release-pipeline
+  events:
+    - tag
 
 steps:
   - name: docker-build-api
