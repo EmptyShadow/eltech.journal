@@ -2,6 +2,25 @@ kind: pipeline
 type: docker
 name: backend
 
+trigger:
+  branch:
+    - feat.*
+    - fix.*
+    - master
+  event:
+    exclude:
+      - tag
+      - pull_request
+
+services:
+  - name: postgres-service
+    image: postgres:9.6.17-alpine
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: trust
+
 steps:
   - name: check-go-mod
     image: golang:alpine
@@ -11,15 +30,7 @@ steps:
       - go mod vendor
       - CHANGES=0; [ -z "$(git status --porcelain)" ] || CHANGES=1
       - exit "$CHANGES"
-    when:
-      branch:
-        - feat.*
-        - fix.*
-        - master
-      event:
-        exclude:
-          - tag
-          - pull_request
+
   - name: build
     image: golang:alpine
     commands:
@@ -27,30 +38,12 @@ steps:
       - go build ./cmd/migrate
     environment:
       CGO_ENABLED: 0
-    when:
-      branch:
-        - feat.*
-        - fix.*
-        - master
-      event:
-        exclude:
-          - tag
-          - pull_request
   - name: unit-tests
     image: golang:alpine
     commands:
       - go test --tags=unit -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
     environment:
       CGO_ENABLED: 0
-    when:
-      branch:
-        - feat.*
-        - fix.*
-        - master
-      event:
-        exclude:
-          - tag
-          - pull_request
   - name: integration-tests
     image: golang:alpine
     commands:
@@ -65,24 +58,7 @@ steps:
       PGUSER: testuser
       PGPASSWORD: password
       PGSSLMODE: disable
-    when:
-      branch:
-        - feat.*
-        - fix.*
-        - master
-      event:
-        exclude:
-          - tag
-          - pull_request
-
-services:
-  - name: postgres-service
-    image: postgres:9.6.17-alpine
-    environment:
-      POSTGRES_DB: testdb
-      POSTGRES_USER: testuser
-      POSTGRES_PASSWORD: password
-      POSTGRES_HOST_AUTH_METHOD: trust
+      PG_CONN_STRING: postgres://testuser:password@postgres-service:5432/testdb?sslmode=disable
 
 #---
 #
