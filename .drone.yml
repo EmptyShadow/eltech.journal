@@ -33,6 +33,7 @@ steps:
   - name: lint
     image: golangci/golangci-lint:v1.34.1
     commands:
+      - apt-get install git
       - golangci-lint run
   - name: build
     image: golang:alpine
