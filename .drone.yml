@@ -81,7 +81,7 @@ name: release
 
 trigger:
   branch:
-    - feat.add-release-pipeline
+    - main
   events:
     - tag
 
@@ -97,15 +97,25 @@ steps:
         from_secret: docker_password
       auto_tag: true
       dockerfile: deployments/container/api.Dockerfile
-
-#steps:
-#  - name: docker-build
-#    image: docker
-#    commands:
-#      - docker login -u $DOCKER_USER -p $DOCKER_PWD
-#      - docker build \
-#      -   -t "$DOCKER_USER"/eltech.journal-api:latest \
-#      -   -t "$DOCKER_USER"/eltech.journal-api:latest \
-#      -   -f ./deployments/container/api.Dockerfile .
-#      - docker build -t "$DOCKER_USER"/eltech.journal-migrate:latest -f ./deployments/container/migrate.Dockerfile .
-#      - docker build -t "$DOCKER_USER"/eltech.journal-ui:latest -f ./deployments/container/ui.Dockerfile .
+  - name: docker-build-migrate
+    image: plugins/docker
+    settings:
+      repo:
+        from_secret: docker_migrate_repo
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      auto_tag: true
+      dockerfile: deployments/container/migrate.Dockerfile
+  - name: docker-build-ui
+    image: plugins/docker
+    settings:
+      repo:
+        from_secret: docker_ui_repo
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      auto_tag: true
+      dockerfile: deployments/container/ui.Dockerfile
