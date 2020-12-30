@@ -3,20 +3,22 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/golang-migrate/migrate/v4"
 	"os"
 	"path/filepath"
 
 	"github.com/EmptyShadow/eltech.journal/pkg/pgx"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
 )
 
 const (
-	up    = "up"
-	down  = "down"
-	drop  = "drop"
+	up   = "up"
+	down = "down"
+	drop = "drop"
 )
 
-var ErrUnsupportedCmd  = errors.New("unsupported cmd")
+var ErrUnsupportedCmd = errors.New("unsupported cmd")
 
 func main() {
 	cmd := os.Args[1]

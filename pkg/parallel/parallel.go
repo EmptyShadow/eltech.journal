@@ -38,4 +38,3 @@ func WaitFnOrCtx(ctx context.Context, fn func() error, done func()) error {
 		return ctx.Err()
 	}
 }
-

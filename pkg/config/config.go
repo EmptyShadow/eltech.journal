@@ -8,9 +8,9 @@ import (
 )
 
 type Value struct {
-	key     string
-	v       string
-	exists  bool
+	key    string
+	v      string
+	exists bool
 }
 
 func Get(key string) *Value {

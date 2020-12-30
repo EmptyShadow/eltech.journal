@@ -73,6 +73,7 @@ func (r *Users) Read(ctx context.Context, id string) (*domain.User, error) {
 	return user, nil
 }
 
+//nolint:gosec // пароль хэширован, все безопасно.
 const queryGetUserPwd = `
 SELECT pwd
 FROM users
@@ -92,12 +93,16 @@ func (r *Users) Pwd(ctx context.Context, id string) ([]byte, error) {
 	return pwd, nil
 }
 
-const queryUpdateUser = `
+const (
+	queryUpdateUser = `
 UPDATE users
 SET updated_at = now(), %s
 WHERE id = $1
 RETURNING updated_at;
 `
+
+	queryUpdateStartArgIndex = 2
+)
 
 func (r *Users) Update(ctx context.Context, user *domain.User) error {
 	fields := []interface{}{"email", user.Email, "pwd", user.Pwd}
@@ -107,7 +112,7 @@ func (r *Users) Update(ctx context.Context, user *domain.User) error {
 			"last_name", user.FullName.LastName)
 	}
 
-	setFields, setValues := sql.BuildUpdateSets(2, "$", fields...)
+	setFields, setValues := sql.BuildUpdateSets(queryUpdateStartArgIndex, "$", fields...)
 
 	var updatedAt sqlstd.NullTime
 

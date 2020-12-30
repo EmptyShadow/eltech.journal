@@ -27,4 +27,3 @@ func NotifySignals(ctx context.Context) error {
 		return ctx.Err()
 	}
 }
-
