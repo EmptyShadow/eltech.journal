@@ -4,7 +4,7 @@ services:
   joutnal-ui:
     build:
       context: ../../
-      dockerfile: deployments/container/journal-ui.Dockerfile
+      dockerfile: ../container/ui.Dockerfile
     restart: on-failure
     ports:
       - "80"
@@ -16,7 +16,7 @@ services:
       dockerfile: deployments/container/journal.Dockerfile
     restart: on-failure
     env_file:
-      - ../../configs/journal.env
+      - ../../configs/api.env
     ports:
       - "7010"
       - "9000"

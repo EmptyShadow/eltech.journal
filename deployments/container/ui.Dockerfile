@@ -8,5 +8,5 @@ RUN npm run build
 FROM nginx:alpine
 RUN mkdir /app
 COPY --from=builder /app/dist /app
-COPY ./configs/journal-ui.conf /etc/nginx/nginx.conf
+COPY ./configs/ui.conf /etc/nginx/nginx.conf
 EXPOSE 80

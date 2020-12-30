@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-	"github.com/EmptyShadow/eltech.journal/pkg/crypto"
-	"golang.org/x/crypto/bcrypt"
 
 	apiusers "github.com/EmptyShadow/eltech.journal/api/users"
 	"github.com/EmptyShadow/eltech.journal/internal/pg"
 	"github.com/EmptyShadow/eltech.journal/internal/users"
 	"github.com/EmptyShadow/eltech.journal/pkg/config"
+	"github.com/EmptyShadow/eltech.journal/pkg/crypto"
 	"github.com/EmptyShadow/eltech.journal/pkg/grpc"
 	"github.com/EmptyShadow/eltech.journal/pkg/http"
 	"github.com/EmptyShadow/eltech.journal/pkg/log"
@@ -17,6 +16,7 @@ import (
 	"github.com/EmptyShadow/eltech.journal/pkg/pprof"
 	"github.com/EmptyShadow/eltech.journal/pkg/shutdown"
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -33,6 +33,8 @@ const (
 )
 
 func main() {
+	ctx := context.Background()
+
 	l := log.NewLogger()
 	defer l.Sync()
 
@@ -49,8 +51,10 @@ func main() {
 
 	l.Info("init endpoints")
 
+	pprofServer := pprof.HTTPServer(http.ServingAddr(config.Get(envPprofAddr).String(pprofAddr)))
 	grpcServer := grpc.NewServer(grpc.ServingAddr(config.Get(envGRPCAPIAddr).String(apiGRPCAddr)))
-	wrappedGrpc := grpcweb.WrapServer(grpcServer.Server)
+	http2GRPCServer := http.NewServer(grpcweb.WrapServer(grpcServer.Server),
+		http.ServingAddr(config.Get(envHTTPAPIAddr).String(apiHTTPAddr)))
 
 	l.Info("registration services")
 
@@ -59,16 +63,12 @@ func main() {
 	l.Info("start app")
 	defer l.Info("stop app")
 
-	shutdown.PanicIfErr(parallel.Run(context.Background(),
-		shutdown.NotifySignals,
-		http.RunServer(
-			pprof.HTTPServer(
-				http.ServingAddr(config.Get(envPprofAddr).String(pprofAddr)),
-			),
+	shutdown.PanicIfErr(
+		parallel.Run(ctx,
+			shutdown.NotifySignals,
+			http.RunServer(pprofServer),
+			grpc.RunServer(grpcServer),
+			http.RunServer(http2GRPCServer),
 		),
-		http.RunServer(
-			http.NewServer(wrappedGrpc, http.ServingAddr(config.Get(envHTTPAPIAddr).String(apiHTTPAddr))),
-		),
-		grpc.RunServer(grpcServer),
-	))
+	)
 }

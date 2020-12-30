@@ -7,7 +7,12 @@ run:
     - third_party$
     - testdata$
     - examples$
-    - protobuf$
+    - api$
+    - web$
+    - configs$
+    - deployments$
+    - docs$
+    - migrations$
   modules-download-mode: vendor
 
 output:
@@ -24,6 +29,9 @@ linters:
     - gochecknoglobals
     - goerr113
     - godot
+    - exhaustivestruct
+    - nolintlint
+    - wrapcheck
 
 issues:
   exclude-rules:

@@ -4,17 +4,17 @@ import (
 	"context"
 	"crypto/sha1"
 	"fmt"
+
 	"github.com/EmptyShadow/eltech.journal/api/domain"
+	"github.com/EmptyShadow/eltech.journal/api/users"
 	"github.com/EmptyShadow/eltech.journal/pkg/email"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"github.com/EmptyShadow/eltech.journal/api/users"
 )
 
 var (
-	ErrInvalidEmail = status.Error(codes.InvalidArgument, "email must be email address")
-	ErrInvalidPwd = status.Error(codes.InvalidArgument, "pwd must be sha1 hash")
+	ErrInvalidEmail    = status.Error(codes.InvalidArgument, "email must be email address")
+	ErrInvalidPwd      = status.Error(codes.InvalidArgument, "pwd must be sha1 hash")
 	ErrFullNameInvalid = status.Error(codes.InvalidArgument, "full name must have first and last names")
 )
 

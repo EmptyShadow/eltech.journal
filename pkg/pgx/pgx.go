@@ -3,6 +3,7 @@ package pgx
 import (
 	"context"
 	"fmt"
+
 	"github.com/EmptyShadow/eltech.journal/pkg/config"
 	"github.com/jackc/pgx/v4/pgxpool"
 )
@@ -23,7 +24,7 @@ func ConnString() string {
 	return config.Get(envPGConnString).String("")
 }
 
-func OpenPool(connString string, appName string) *pgxpool.Pool {
+func OpenPool(connString, appName string) *pgxpool.Pool {
 	conf, err := pgxpool.ParseConfig(connString)
 	if err != nil {
 		panic(fmt.Errorf("failed parse postgres conf: %w", err))

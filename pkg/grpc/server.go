@@ -2,9 +2,10 @@ package grpc
 
 import (
 	"context"
+	"net"
+
 	"github.com/EmptyShadow/eltech.journal/pkg/parallel"
 	"google.golang.org/grpc"
-	"net"
 )
 
 const defaultServingAddr = "0.0.0.0:9000"
@@ -16,7 +17,7 @@ type Server struct {
 
 type serverOpts struct {
 	servingAddr string
-	grpcOpts []grpc.ServerOption
+	grpcOpts    []grpc.ServerOption
 }
 
 type ServerOpt func(opt *serverOpts)
@@ -66,4 +67,3 @@ func RunServer(server *Server) parallel.Func {
 		)
 	}
 }
-
