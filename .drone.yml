@@ -30,7 +30,10 @@ steps:
       - go mod vendor
       - CHANGES=0; [ -z "$(git status --porcelain)" ] || CHANGES=1
       - exit "$CHANGES"
-
+  - name: lint
+    image: golangci/golangci-lint:v1.34.1
+    commands:
+      - golangci-lint run
   - name: build
     image: golang:alpine
     commands:
