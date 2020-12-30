@@ -72,24 +72,50 @@ steps:
       PG_CONN_STRING: postgres://testuser:password@postgres-service:5432/testdb?sslmode=disable
     depends_on:
       - build
-#---
-#
-#kind: pipeline
-#type: docker
-#name: release
-#
-#steps:
-#  - name: docker-build
-#    image: docker
-#    commands:
-#      - docker login -u $DOCKER_USER -p $DOCKER_PWD
-#      - docker build \
-#      -   -t "$DOCKER_USER"/eltech.journal-api:latest \
-#      -   -t "$DOCKER_USER"/eltech.journal-api:latest \
-#      -   -f ./deployments/container/api.Dockerfile .
-#      - docker build -t "$DOCKER_USER"/eltech.journal-migrate:latest -f ./deployments/container/migrate.Dockerfile .
-#      - docker build -t "$DOCKER_USER"/eltech.journal-ui:latest -f ./deployments/container/ui.Dockerfile .
-#
-#when:
-#  event:
-#    - tag
+
+---
+
+kind: pipeline
+type: docker
+name: release
+
+trigger:
+  branch:
+    - main
+  events:
+    - tag
+
+steps:
+  - name: docker-build-api
+    image: plugins/docker
+    settings:
+      repo:
+        from_secret: docker_api_repo
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      auto_tag: true
+      dockerfile: deployments/container/api.Dockerfile
+  - name: docker-build-migrate
+    image: plugins/docker
+    settings:
+      repo:
+        from_secret: docker_migrate_repo
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      auto_tag: true
+      dockerfile: deployments/container/migrate.Dockerfile
+  - name: docker-build-ui
+    image: plugins/docker
+    settings:
+      repo:
+        from_secret: docker_ui_repo
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      auto_tag: true
+      dockerfile: deployments/container/ui.Dockerfile

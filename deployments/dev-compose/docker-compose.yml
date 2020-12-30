@@ -13,7 +13,7 @@ services:
   journal-api:
     build:
       context: ../../
-      dockerfile: deployments/container/journal.Dockerfile
+      dockerfile: ../container/api.Dockerfile
     restart: on-failure
     env_file:
       - ../../configs/api.env
