@@ -24,15 +24,6 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_HOST_AUTH_METHOD: trust
 
-environment:
-  PGHOST: postgres-service
-  PGPORT: 5432
-  PGDATABASE: testdb
-  PGUSER: testuser
-  PGPASSWORD: password
-  PGSSLMODE: disable
-  PG_CONN_STRING: postgres://testuser:password@postgres-service:5432/testdb?sslmode=disable
-
 steps:
   - name: check-go-mod
     image: golang:alpine
@@ -50,8 +41,11 @@ steps:
   - name: build
     image: golang:alpine
     commands:
-      - go build ./cmd/api
-      - go build ./cmd/migrate
+      - go build -o ./journal-api ./cmd/api
+      - go build -o ./journal-migrate ./cmd/migrate
+    environment:
+      CGO_ENABLED: 0
+      GO111MODULE: on
     depends_on:
       - check-go-mod
       - lint
@@ -59,22 +53,44 @@ steps:
     image: golang:alpine
     commands:
       - go test --tags=unit -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
+    environment:
+      CGO_ENABLED: 0
+      GO111MODULE: on
     depends_on:
       - build
   - name: integration-tests
     image: golang:alpine
     commands:
       - sleep 5
-      - ./migrate up
+      - ./journal-migrate up
       - go test --tags=integration -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
+    environment:
+      CGO_ENABLED: 0
+      GO111MODULE: on
+      PGHOST: postgres-service
+      PGPORT: 5432
+      PGDATABASE: testdb
+      PGUSER: testuser
+      PGPASSWORD: password
+      PGSSLMODE: disable
+      PG_CONN_STRING: postgres://testuser:password@postgres-service:5432/testdb?sslmode=disable
     depends_on:
       - build
   - name: e2e-tests
     image: golang:alpine
     commands:
-      - ./api &
+      - ./journal-api &
       - sleep 1
       - go test --tags=e2e -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./cmd/...
+    environment:
+      CGO_ENABLED: 0
+      GO111MODULE: on
+      PGHOST: postgres-service
+      PGPORT: 5432
+      PGDATABASE: testdb
+      PGUSER: testuser
+      PGPASSWORD: password
+      PGSSLMODE: disable
     depends_on:
       - unit-tests
       - integration-tests
