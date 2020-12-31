@@ -1,26 +1,26 @@
 version: '3.4'
 
 services:
-  joutnal-ui:
+  ui:
     build:
       context: ../../
-      dockerfile: ../container/ui.Dockerfile
+      dockerfile: deployments/container/ui.Dockerfile
     restart: on-failure
     ports:
       - "80"
     depends_on:
-      - journal-api
-  journal-api:
+      - api
+  api:
     build:
       context: ../../
-      dockerfile: ../container/api.Dockerfile
+      dockerfile: deployments/container/api.Dockerfile
     restart: on-failure
     env_file:
       - ../../configs/api.env
     ports:
-      - "7010"
-      - "9000"
-      - "8000"
+      - "7010:7010"
+      - "9000:9000"
+      - "8000:8000"
     depends_on:
       - postgres
       - migrate

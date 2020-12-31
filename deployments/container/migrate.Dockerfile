@@ -5,10 +5,10 @@ COPY pkg pkg
 COPY vendor vendor
 COPY go.mod go.mod
 COPY go.sum go.sum
-COPY cmd cmd
-RUN go build -mod=vendor -o /migrate ./cmd/migrate
+COPY cmd/migrate cmd/migrate
+RUN go build -mod=vendor -o /journal-migrate ./cmd/migrate
 
 FROM scratch
-COPY --from=builder /migrate /migrate
+COPY --from=builder /journal-migrate /journal-migrate
 COPY migrations /migrations
-ENTRYPOINT ["/migrate", "up"]
+ENTRYPOINT ["/journal-migrate", "up"]
