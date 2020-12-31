@@ -10,12 +10,12 @@ COPY pkg pkg
 COPY vendor vendor
 COPY go.mod go.mod
 COPY go.sum go.sum
-COPY cmd cmd
-RUN go build -mod=vendor -o /journal ./cmd/journal
+COPY cmd/api cmd/api
+RUN go build -mod=vendor -o /journal-api ./cmd/api
 
 FROM scratch
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 COPY --from=builder /etc/localtime /etc/localtime
-COPY --from=builder /journal /journal
-ENTRYPOINT ["/journal"]
+COPY --from=builder /journal-api /journal-api
+ENTRYPOINT ["/journal-api"]
 EXPOSE 8000 9000 7010
