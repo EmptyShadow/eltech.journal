@@ -24,16 +24,6 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_HOST_AUTH_METHOD: trust
 
-environment:
-  CGO_ENABLED: 0
-  PGHOST: postgres-service
-  PGPORT: 5432
-  PGDATABASE: testdb
-  PGUSER: testuser
-  PGPASSWORD: password
-  PGSSLMODE: disable
-  PG_CONN_STRING: postgres://testuser:password@postgres-service:5432/testdb?sslmode=disable
-
 steps:
   - name: check-go-mod
     image: golang:alpine
@@ -50,7 +40,7 @@ steps:
   - name: build
     image: golang:alpine
     commands:
-      - go build ./cmd/api
+      - go build ./cmd/journal
       - go build ./cmd/migrate
     depends_on:
       - check-go-mod
@@ -67,6 +57,14 @@ steps:
       - sleep 5
       - ./migrate up
       - go test --tags=integration -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./...
+    environment:
+      PGHOST: postgres-service
+      PGPORT: 5432
+      PGDATABASE: testdb
+      PGUSER: testuser
+      PGPASSWORD: password
+      PGSSLMODE: disable
+      PG_CONN_STRING: postgres://testuser:password@postgres-service:5432/testdb?sslmode=disable
     depends_on:
       - build
   - name: e2e-tests
@@ -75,9 +73,16 @@ steps:
       - ./api &
       - sleep 1
       - go test --tags=e2e -mod=vendor -covermode=atomic -coverprofile=profile.cov -v ./cmd/...
+    environment:
+      PGHOST: postgres-service
+      PGPORT: 5432
+      PGDATABASE: testdb
+      PGUSER: testuser
+      PGPASSWORD: password
+      PGSSLMODE: disable
+      PG_CONN_STRING: postgres://testuser:password@postgres-service:5432/testdb?sslmode=disable
     depends_on:
-      - unit-tests
-      - integration-tests
+      - build
 
 ---
 
