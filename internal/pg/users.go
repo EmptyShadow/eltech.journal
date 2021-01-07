@@ -60,7 +60,8 @@ SELECT id,
        updated_at,
        deleted_at
 FROM users
-WHERE id = $1;
+WHERE id = $1
+LIMIT 1;
 `
 
 func (r *Users) Read(ctx context.Context, id string) (*domain.User, error) {
@@ -83,7 +84,8 @@ SELECT id,
        updated_at,
        deleted_at
 FROM users
-WHERE email = $1;
+WHERE email = $1
+LIMIT 1;
 `
 
 func (r *Users) ReadByEmail(ctx context.Context, email string) (*domain.User, error) {
@@ -139,7 +141,7 @@ DELETE FROM users WHERE id = $1;
 func (r *Users) Delete(ctx context.Context, id string) error {
 	_, err := r.db.Exec(ctx, queryDeleteUserByID, id)
 	if err != nil {
-		return fmt.Errorf("failed exec delete: %w", err)
+		return fmt.Errorf("failed exec delete users: %w", err)
 	}
 
 	return nil
