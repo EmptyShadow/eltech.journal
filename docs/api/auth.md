@@ -3,123 +3,79 @@
 
 ## Table of Contents
 
-- [domain.proto](#domain.proto)
-    - [Claims](#github.com.EmptyShadow.eltech.journal.api.Claims)
-    - [Credentials](#github.com.EmptyShadow.eltech.journal.api.Credentials)
-    - [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName)
-    - [Session](#github.com.EmptyShadow.eltech.journal.api.Session)
-    - [Tokens](#github.com.EmptyShadow.eltech.journal.api.Tokens)
-    - [User](#github.com.EmptyShadow.eltech.journal.api.User)
+- [auth.proto](#auth.proto)
+    - [RefreshRequest](#github.com.EmptyShadow.eltech.journal.api.RefreshRequest)
+    - [RefreshResponse](#github.com.EmptyShadow.eltech.journal.api.RefreshResponse)
+    - [TrustRequest](#github.com.EmptyShadow.eltech.journal.api.TrustRequest)
+    - [TrustResponse](#github.com.EmptyShadow.eltech.journal.api.TrustResponse)
+  
+    - [Auth](#github.com.EmptyShadow.eltech.journal.api.Auth)
   
 - [Scalar Value Types](#scalar-value-types)
 
 
 
-<a name="domain.proto"></a>
+<a name="auth.proto"></a>
 <p align="right"><a href="#top">Top</a></p>
 
-## domain.proto
+## auth.proto
 
 
 
-<a name="github.com.EmptyShadow.eltech.journal.api.Claims"></a>
+<a name="github.com.EmptyShadow.eltech.journal.api.RefreshRequest"></a>
 
-### Claims
-Claims утверждения зашитые в jwt токен.
+### RefreshRequest
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| SessionID | [string](#string) |  |  |
-| UserID | [string](#string) |  |  |
+| RefreshToken | [string](#string) |  |  |
 
 
 
 
 
 
-<a name="github.com.EmptyShadow.eltech.journal.api.Credentials"></a>
+<a name="github.com.EmptyShadow.eltech.journal.api.RefreshResponse"></a>
 
-### Credentials
-Учетные данные.
+### RefreshResponse
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Email | [string](#string) |  |  |
-| SHA1HashPWD | [bytes](#bytes) |  |  |
+| Tokens | [Tokens](#github.com.EmptyShadow.eltech.journal.api.Tokens) |  |  |
 
 
 
 
 
 
-<a name="github.com.EmptyShadow.eltech.journal.api.FullName"></a>
+<a name="github.com.EmptyShadow.eltech.journal.api.TrustRequest"></a>
 
-### FullName
-Полное имя пользователя.
+### TrustRequest
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| FirstName | [string](#string) |  | Имя. |
-| MiddleName | [string](#string) |  | Отчество, не обязательное поле. |
-| LastName | [string](#string) |  | Фамилия. |
+| Credentials | [Credentials](#github.com.EmptyShadow.eltech.journal.api.Credentials) |  |  |
 
 
 
 
 
 
-<a name="github.com.EmptyShadow.eltech.journal.api.Session"></a>
+<a name="github.com.EmptyShadow.eltech.journal.api.TrustResponse"></a>
 
-### Session
-Сессия пользователя.
+### TrustResponse
+
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| ID | [string](#string) |  | Идентификтор сессии. |
-| UserID | [string](#string) |  | Идентификаотр пользователя. |
-| CreatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата время создания сессии. |
-| ClosedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата время закрытия сессии. |
-
-
-
-
-
-
-<a name="github.com.EmptyShadow.eltech.journal.api.Tokens"></a>
-
-### Tokens
-Токены клиента.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| Access | [string](#string) |  | Токен доступа к приватным методам API. |
-| Refresh | [string](#string) |  | Токен для обновления пары токенов. |
-
-
-
-
-
-
-<a name="github.com.EmptyShadow.eltech.journal.api.User"></a>
-
-### User
-Пользователь.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| ID | [string](#string) |  | Идентификатор в формате UUID. |
-| Email | [string](#string) |  | Электронная почта. |
-| Pwd | [bytes](#bytes) |  | Соленный пароль. |
-| FullName | [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName) |  | Полное имя. |
-| CreatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата создания записи. |
-| UpdatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата обновление полей записи. |
-| DeletedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата удаления записи. |
+| Tokens | [Tokens](#github.com.EmptyShadow.eltech.journal.api.Tokens) |  |  |
 
 
 
@@ -130,6 +86,17 @@ Claims утверждения зашитые в jwt токен.
  
 
  
+
+
+<a name="github.com.EmptyShadow.eltech.journal.api.Auth"></a>
+
+### Auth
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| Trust | [TrustRequest](#github.com.EmptyShadow.eltech.journal.api.TrustRequest) | [TrustResponse](#github.com.EmptyShadow.eltech.journal.api.TrustResponse) |  |
+| Refresh | [RefreshRequest](#github.com.EmptyShadow.eltech.journal.api.RefreshRequest) | [RefreshResponse](#github.com.EmptyShadow.eltech.journal.api.RefreshResponse) |  |
 
  
 

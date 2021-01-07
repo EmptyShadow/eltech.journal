@@ -23,14 +23,13 @@
 <a name="github.com.EmptyShadow.eltech.journal.api.CreateRequest"></a>
 
 ### CreateRequest
-
+Запрос на регитсрацию пользователя.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Email | [string](#string) |  |  |
+| Credentials | [Credentials](#github.com.EmptyShadow.eltech.journal.api.Credentials) |  |  |
 | FullName | [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName) |  |  |
-| SHA1HashPWD | [bytes](#bytes) |  |  |
 
 
 
@@ -40,7 +39,7 @@
 <a name="github.com.EmptyShadow.eltech.journal.api.CreateResponse"></a>
 
 ### CreateResponse
-
+Ответ от API с успешно созданным пользователем.
 
 
 | Field | Type | Label | Description |
@@ -61,11 +60,11 @@
 <a name="github.com.EmptyShadow.eltech.journal.api.Users"></a>
 
 ### Users
-
+Сервис контекста пользователей.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| Create | [CreateRequest](#github.com.EmptyShadow.eltech.journal.api.CreateRequest) | [CreateResponse](#github.com.EmptyShadow.eltech.journal.api.CreateResponse) |  |
+| Create | [CreateRequest](#github.com.EmptyShadow.eltech.journal.api.CreateRequest) | [CreateResponse](#github.com.EmptyShadow.eltech.journal.api.CreateResponse) | Регистрация пользователя в системе. |
 
  
 

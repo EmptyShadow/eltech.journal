@@ -40,9 +40,11 @@ func Test_Users(t *testing.T) {
 	}
 
 	res, err := users.Create(context.Background(), &usersapi.CreateRequest{
-		Email:       email,
-		FullName:    fn,
-		SHA1HashPWD: pwdHash.Sum(nil),
+		Credentials: &domain.Credentials{
+			Email:       email,
+			SHA1HashPWD: pwdHash.Sum(nil),
+		},
+		FullName: fn,
 	})
 	if err != nil {
 		t.Fatal(err)

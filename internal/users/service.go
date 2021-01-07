@@ -12,12 +12,6 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-var (
-	ErrInvalidEmail    = status.Error(codes.InvalidArgument, "email must be email address")
-	ErrInvalidPwd      = status.Error(codes.InvalidArgument, "pwd must be sha1 hash")
-	ErrFullNameInvalid = status.Error(codes.InvalidArgument, "full name must have first and last names")
-)
-
 type PwdCryptor interface {
 	HashAndSalt(pwd []byte) ([]byte, error)
 }
@@ -36,24 +30,30 @@ func NewService(repo Repository, pwdCryptor PwdCryptor) *Service {
 }
 
 func (s *Service) Create(ctx context.Context, r *users.CreateRequest) (*users.CreateResponse, error) {
-	if !email.IsValid(r.Email) {
-		return nil, ErrInvalidEmail
+	if r.Credentials == nil {
+		return nil, status.Error(codes.InvalidArgument, "credentials must be not empty")
 	}
 
-	if len(r.SHA1HashPWD) != sha1.Size {
-		return nil, ErrInvalidPwd
+	cred := r.Credentials
+
+	if !email.IsValid(cred.Email) {
+		return nil, status.Error(codes.InvalidArgument, "email must be email address")
+	}
+
+	if len(cred.SHA1HashPWD) != sha1.Size {
+		return nil, status.Error(codes.InvalidArgument, "pwd must be sha1 hash")
 	}
 
 	if r.FullName == nil || r.FullName.FirstName == "" || r.FullName.LastName == "" {
-		return nil, ErrFullNameInvalid
+		return nil, status.Error(codes.InvalidArgument, "full name must have first and last names")
 	}
 
-	encryptedPwdHash, err := s.pwdCryptor.HashAndSalt(r.SHA1HashPWD)
+	encryptedPwdHash, err := s.pwdCryptor.HashAndSalt(cred.SHA1HashPWD)
 	if err != nil {
 		return nil, fmt.Errorf("failed hash and salt pwd: %w", err)
 	}
 
-	u, err := s.repo.Save(ctx, r.Email, encryptedPwdHash, r.FullName)
+	u, err := s.repo.Save(ctx, cred.Email, encryptedPwdHash, r.FullName)
 	if err != nil {
 		return nil, fmt.Errorf("failed save user: %w", err)
 	}

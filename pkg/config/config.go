@@ -40,6 +40,20 @@ func (v *Value) String(def string) string {
 	return v.v
 }
 
+func (v *Value) MustBytes() []byte {
+	v.panicIfNotExists()
+
+	return []byte(v.v)
+}
+
+func (v *Value) Bytes(def []byte) []byte {
+	if v.v == "" {
+		return def
+	}
+
+	return []byte(v.v)
+}
+
 func (v *Value) MustString() string {
 	v.panicIfNotExists()
 

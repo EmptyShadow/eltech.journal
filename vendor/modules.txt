@@ -3,6 +3,9 @@ github.com/davecgh/go-spew/spew
 # github.com/desertbit/timer v0.0.0-20180107155436-c41aec40b27f
 ## explicit
 github.com/desertbit/timer
+# github.com/dgrijalva/jwt-go v3.2.0+incompatible
+## explicit
+github.com/dgrijalva/jwt-go
 # github.com/gogo/protobuf v1.3.1
 ## explicit
 github.com/gogo/protobuf/proto
@@ -64,6 +67,11 @@ github.com/lib/pq/oid
 github.com/lib/pq/scram
 # github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f
 ## explicit
+# github.com/oklog/ulid v1.3.1
+## explicit
+# github.com/oklog/ulid/v2 v2.0.2
+## explicit
+github.com/oklog/ulid/v2
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/rs/cors v1.7.0
