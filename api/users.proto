@@ -5,16 +5,19 @@ option go_package = "github.com/EmptyShadow/eltech.journal/api/users";
 
 import "github.com/EmptyShadow/eltech.journal/api/domain.proto";
 
+// Запрос на регитсрацию пользователя.
 message CreateRequest {
-  string Email = 1;
-  github.com.EmptyShadow.eltech.journal.api.FullName FullName = 2;
-  bytes SHA1HashPWD = 3;
+  github.com.EmptyShadow.eltech.journal.api.Credentials Credentials = 1;
+  FullName FullName = 2;
 }
 
+// Ответ от API с успешно созданным пользователем.
 message CreateResponse {
   github.com.EmptyShadow.eltech.journal.api.User User = 1;
 }
 
+// Сервис контекста пользователей.
 service Users {
+  // Регистрация пользователя в системе.
   rpc Create(CreateRequest) returns(CreateResponse) {};
 }

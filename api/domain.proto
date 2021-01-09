@@ -21,6 +21,7 @@ message User {
   string ID = 1;
   // Электронная почта.
   string Email = 2;
+  // Соленный пароль.
   bytes Pwd = 3;
   // Полное имя.
   FullName FullName = 4;
@@ -30,4 +31,36 @@ message User {
   google.protobuf.Timestamp UpdatedAt = 6;
   // Дата удаления записи.
   google.protobuf.Timestamp DeletedAt = 7;
+}
+
+// Учетные данные.
+message Credentials {
+  string Email = 1;
+  bytes SHA1HashPWD = 2;
+}
+
+// Токены клиента.
+message Tokens {
+  // Токен доступа к приватным методам API.
+  string Access = 1;
+  // Токен для обновления пары токенов.
+  string Refresh = 2;
+}
+
+// Сессия пользователя.
+message Session {
+  // Идентификтор сессии.
+  string ID = 1;
+  // Идентификаотр пользователя.
+  string UserID = 2;
+  // Дата время создания сессии.
+  google.protobuf.Timestamp CreatedAt = 3;
+  // Дата время закрытия сессии.
+  google.protobuf.Timestamp ClosedAt = 4;
+}
+
+// Claims утверждения зашитые в jwt токен.
+message Claims {
+  string SessionID = 1;
+  string UserID = 2;
 }

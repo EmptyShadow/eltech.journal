@@ -56,15 +56,15 @@ func TestUsers_Read(t *testing.T) {
 	}
 }
 
-func TestUsers_Pwd(t *testing.T) {
+func TestUsers_ReadByEmail(t *testing.T) {
 	asserting := assert.New(t)
 
 	r := pg.NewUsers(pgdb)
 
-	for id, wantUser := range users {
-		gotPwd, err := r.Pwd(context.Background(), id)
-		if asserting.NoError(err) {
-			asserting.Equal(gotPwd, wantUser.Pwd)
+	for _, wantUser := range users {
+		gotUser, err := r.ReadByEmail(context.Background(), wantUser.Email)
+		if asserting.NoError(err) && asserting.NotNil(gotUser) {
+			asserting.Equal(gotUser, wantUser)
 		}
 	}
 }

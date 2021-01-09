@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option go_package = "github.com/EmptyShadow/eltech.journal/api/auth";
+package github.com.EmptyShadow.eltech.journal.api;
+
+import "github.com/EmptyShadow/eltech.journal/api/domain.proto";
+
+message TrustRequest {
+  github.com.EmptyShadow.eltech.journal.api.Credentials Credentials = 1;
+}
+
+message TrustResponse {
+  github.com.EmptyShadow.eltech.journal.api.Tokens Tokens = 1;
+}
+
+message RefreshRequest {
+  string RefreshToken = 1;
+}
+
+message RefreshResponse {
+  github.com.EmptyShadow.eltech.journal.api.Tokens Tokens = 1;
+}
+
+service Auth {
+  rpc Trust(TrustRequest) returns(TrustResponse) {};
+  rpc Refresh(RefreshRequest) returns(RefreshResponse) {};
+}

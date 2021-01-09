@@ -90,9 +90,8 @@ proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.toObject
  */
 proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
-    email: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    fullname: (f = msg.getFullname()) && github_com_EmptyShadow_eltech_journal_api_domain_pb.FullName.toObject(includeInstance, f),
-    sha1hashpwd: msg.getSha1hashpwd_asB64()
+    credentials: (f = msg.getCredentials()) && github_com_EmptyShadow_eltech_journal_api_domain_pb.Credentials.toObject(includeInstance, f),
+    fullname: (f = msg.getFullname()) && github_com_EmptyShadow_eltech_journal_api_domain_pb.FullName.toObject(includeInstance, f)
   };
 
   if (includeInstance) {
@@ -130,17 +129,14 @@ proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.deserializeBinaryF
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setEmail(value);
+      var value = new github_com_EmptyShadow_eltech_journal_api_domain_pb.Credentials;
+      reader.readMessage(value,github_com_EmptyShadow_eltech_journal_api_domain_pb.Credentials.deserializeBinaryFromReader);
+      msg.setCredentials(value);
       break;
     case 2:
       var value = new github_com_EmptyShadow_eltech_journal_api_domain_pb.FullName;
       reader.readMessage(value,github_com_EmptyShadow_eltech_journal_api_domain_pb.FullName.deserializeBinaryFromReader);
       msg.setFullname(value);
-      break;
-    case 3:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
-      msg.setSha1hashpwd(value);
       break;
     default:
       reader.skipField();
@@ -171,11 +167,12 @@ proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.serializ
  */
 proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getEmail();
-  if (f.length > 0) {
-    writer.writeString(
+  f = message.getCredentials();
+  if (f != null) {
+    writer.writeMessage(
       1,
-      f
+      f,
+      github_com_EmptyShadow_eltech_journal_api_domain_pb.Credentials.serializeBinaryToWriter
     );
   }
   f = message.getFullname();
@@ -186,31 +183,43 @@ proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.serializeBinaryToW
       github_com_EmptyShadow_eltech_journal_api_domain_pb.FullName.serializeBinaryToWriter
     );
   }
-  f = message.getSha1hashpwd_asU8();
-  if (f.length > 0) {
-    writer.writeBytes(
-      3,
-      f
-    );
-  }
 };
 
 
 /**
- * optional string Email = 1;
- * @return {string}
+ * optional Credentials Credentials = 1;
+ * @return {?proto.github.com.EmptyShadow.eltech.journal.api.Credentials}
  */
-proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.getEmail = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
+proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.getCredentials = function() {
+  return /** @type{?proto.github.com.EmptyShadow.eltech.journal.api.Credentials} */ (
+    jspb.Message.getWrapperField(this, github_com_EmptyShadow_eltech_journal_api_domain_pb.Credentials, 1));
 };
 
 
 /**
- * @param {string} value
+ * @param {?proto.github.com.EmptyShadow.eltech.journal.api.Credentials|undefined} value
+ * @return {!proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest} returns this
+*/
+proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.setCredentials = function(value) {
+  return jspb.Message.setWrapperField(this, 1, value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
  * @return {!proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest} returns this
  */
-proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.setEmail = function(value) {
-  return jspb.Message.setProto3StringField(this, 1, value);
+proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.clearCredentials = function() {
+  return this.setCredentials(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.hasCredentials = function() {
+  return jspb.Message.getField(this, 1) != null;
 };
 
 
@@ -248,48 +257,6 @@ proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.clearFul
  */
 proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.hasFullname = function() {
   return jspb.Message.getField(this, 2) != null;
-};
-
-
-/**
- * optional bytes SHA1HashPWD = 3;
- * @return {string}
- */
-proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.getSha1hashpwd = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
-};
-
-
-/**
- * optional bytes SHA1HashPWD = 3;
- * This is a type-conversion wrapper around `getSha1hashpwd()`
- * @return {string}
- */
-proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.getSha1hashpwd_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getSha1hashpwd()));
-};
-
-
-/**
- * optional bytes SHA1HashPWD = 3;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getSha1hashpwd()`
- * @return {!Uint8Array}
- */
-proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.getSha1hashpwd_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getSha1hashpwd()));
-};
-
-
-/**
- * @param {!(string|Uint8Array)} value
- * @return {!proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest} returns this
- */
-proto.github.com.EmptyShadow.eltech.journal.api.CreateRequest.prototype.setSha1hashpwd = function(value) {
-  return jspb.Message.setProto3BytesField(this, 3, value);
 };
 
 

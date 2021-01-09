@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/desertbit/timer v0.0.0-20180107155436-c41aec40b27f // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gogo/protobuf v1.3.1
 	github.com/golang-migrate/migrate/v4 v4.14.1
 	github.com/gorilla/websocket v1.4.2 // indirect
@@ -12,6 +13,7 @@ require (
 	github.com/jackc/pgx/v4 v4.10.0
 	github.com/lib/pq v1.8.0
 	github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f // indirect
+	github.com/oklog/ulid/v2 v2.0.2
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/stretchr/testify v1.5.1
 	go.uber.org/zap v1.16.0

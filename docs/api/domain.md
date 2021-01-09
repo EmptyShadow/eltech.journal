@@ -4,7 +4,11 @@
 ## Table of Contents
 
 - [domain.proto](#domain.proto)
+    - [Claims](#github.com.EmptyShadow.eltech.journal.api.Claims)
+    - [Credentials](#github.com.EmptyShadow.eltech.journal.api.Credentials)
     - [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName)
+    - [Session](#github.com.EmptyShadow.eltech.journal.api.Session)
+    - [Tokens](#github.com.EmptyShadow.eltech.journal.api.Tokens)
     - [User](#github.com.EmptyShadow.eltech.journal.api.User)
   
 - [Scalar Value Types](#scalar-value-types)
@@ -15,6 +19,38 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## domain.proto
+
+
+
+<a name="github.com.EmptyShadow.eltech.journal.api.Claims"></a>
+
+### Claims
+Claims утверждения зашитые в jwt токен.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| SessionID | [string](#string) |  |  |
+| UserID | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="github.com.EmptyShadow.eltech.journal.api.Credentials"></a>
+
+### Credentials
+Учетные данные.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Email | [string](#string) |  |  |
+| SHA1HashPWD | [bytes](#bytes) |  |  |
+
+
+
 
 
 
@@ -35,6 +71,40 @@
 
 
 
+<a name="github.com.EmptyShadow.eltech.journal.api.Session"></a>
+
+### Session
+Сессия пользователя.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| ID | [string](#string) |  | Идентификтор сессии. |
+| UserID | [string](#string) |  | Идентификаотр пользователя. |
+| CreatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата время создания сессии. |
+| ClosedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата время закрытия сессии. |
+
+
+
+
+
+
+<a name="github.com.EmptyShadow.eltech.journal.api.Tokens"></a>
+
+### Tokens
+Токены клиента.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Access | [string](#string) |  | Токен доступа к приватным методам API. |
+| Refresh | [string](#string) |  | Токен для обновления пары токенов. |
+
+
+
+
+
+
 <a name="github.com.EmptyShadow.eltech.journal.api.User"></a>
 
 ### User
@@ -45,7 +115,7 @@
 | ----- | ---- | ----- | ----------- |
 | ID | [string](#string) |  | Идентификатор в формате UUID. |
 | Email | [string](#string) |  | Электронная почта. |
-| Pwd | [bytes](#bytes) |  |  |
+| Pwd | [bytes](#bytes) |  | Соленный пароль. |
 | FullName | [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName) |  | Полное имя. |
 | CreatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата создания записи. |
 | UpdatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата обновление полей записи. |

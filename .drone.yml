@@ -91,6 +91,8 @@ steps:
       PGUSER: testuser
       PGPASSWORD: password
       PGSSLMODE: disable
+      JWT_ISSUER: e2e-tester
+      JWT_PRIVATE_KEY: private_key
     depends_on:
       - unit-tests
       - integration-tests
@@ -102,10 +104,9 @@ type: docker
 name: release
 
 trigger:
-  branch:
-    - main
-  events:
-    - tag
+  ref:
+    - refs/heads/main
+    - refs/tags/*
 
 steps:
   - name: docker-build-api

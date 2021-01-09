@@ -10,14 +10,13 @@ import (
 	"github.com/EmptyShadow/eltech.journal/pkg/sql"
 	"github.com/gogo/protobuf/types"
 	"github.com/jackc/pgx/v4"
-	"github.com/jackc/pgx/v4/pgxpool"
 )
 
 type Users struct {
-	db *pgxpool.Pool
+	db DB
 }
 
-func NewUsers(db *pgxpool.Pool) *Users {
+func NewUsers(db DB) *Users {
 	return &Users{db: db}
 }
 
@@ -61,7 +60,8 @@ SELECT id,
        updated_at,
        deleted_at
 FROM users
-WHERE id = $1;
+WHERE id = $1
+LIMIT 1;
 `
 
 func (r *Users) Read(ctx context.Context, id string) (*domain.User, error) {
@@ -73,24 +73,28 @@ func (r *Users) Read(ctx context.Context, id string) (*domain.User, error) {
 	return user, nil
 }
 
-//nolint:gosec // пароль хэширован, все безопасно.
-const queryGetUserPwd = `
-SELECT pwd
+const queryReadUserByEmail = `
+SELECT id,
+       email,
+       pwd,
+       first_name,
+       middle_name,
+       last_name,
+       created_at,
+       updated_at,
+       deleted_at
 FROM users
-WHERE id = $1;
+WHERE email = $1
+LIMIT 1;
 `
 
-func (r *Users) Pwd(ctx context.Context, id string) ([]byte, error) {
-	var pwd []byte
-
-	err := r.db.
-		QueryRow(ctx, queryGetUserPwd, id).
-		Scan(&pwd)
+func (r *Users) ReadByEmail(ctx context.Context, email string) (*domain.User, error) {
+	user, err := r.scan(r.db.QueryRow(ctx, queryReadUserByEmail, email))
 	if err != nil {
-		return nil, fmt.Errorf("failed exec select: %w", err)
+		return nil, fmt.Errorf("failed select user: %w", err)
 	}
 
-	return pwd, nil
+	return user, nil
 }
 
 const (
@@ -137,7 +141,7 @@ DELETE FROM users WHERE id = $1;
 func (r *Users) Delete(ctx context.Context, id string) error {
 	_, err := r.db.Exec(ctx, queryDeleteUserByID, id)
 	if err != nil {
-		return fmt.Errorf("failed exec delete: %w", err)
+		return fmt.Errorf("failed exec delete users: %w", err)
 	}
 
 	return nil
