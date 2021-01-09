@@ -83,6 +83,12 @@ func Test_Auth(t *testing.T) {
 	email := "example@gmail.com"
 	pwd := []byte("qwertyuio")
 
+	pwdHash := sha1.New()
+	_, err := pwdHash.Write(pwd)
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	resAuth, err := auth.Trust(context.Background(), &authapi.TrustRequest{
 		Credentials: &domain.Credentials{
 			Email:       email,
