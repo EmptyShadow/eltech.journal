@@ -21,8 +21,8 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	os.Setenv("JWT_ISSUER", "test issuer")
-	os.Setenv("JWT_PRIVATE_KEY", "private key")
+	_ = os.Setenv("JWT_ISSUER", "test issuer")
+	_ = os.Setenv("JWT_PRIVATE_KEY", "private key")
 
 	manager = jwt.NewTokenManager()
 
