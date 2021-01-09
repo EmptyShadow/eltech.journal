@@ -92,7 +92,7 @@ func Test_Auth(t *testing.T) {
 	resAuth, err := auth.Trust(context.Background(), &authapi.TrustRequest{
 		Credentials: &domain.Credentials{
 			Email:       email,
-			SHA1HashPWD: pwd,
+			SHA1HashPWD: pwdHash.Sum(nil),
 		},
 	})
 	if !(asserting.NoError(err) &&

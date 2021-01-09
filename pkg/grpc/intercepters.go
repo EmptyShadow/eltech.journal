@@ -49,7 +49,7 @@ func UnaryServerLogger(l *zap.Logger) grpc.UnaryServerInterceptor {
 			if err != nil {
 				fields = append(fields, zap.Error(err))
 
-				l.Error("output", fields...)
+				l.Info("output", fields...)
 			} else {
 				fields = append(fields, zap.String("response message", proto.MessageName(resp.(proto.Message))))
 
