@@ -13,7 +13,6 @@ require (
 	github.com/jackc/pgx/v4 v4.10.0
 	github.com/lib/pq v1.8.0
 	github.com/mwitkow/go-conntrack v0.0.0-20190716064945-2f068394615f // indirect
-	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/oklog/ulid/v2 v2.0.2
 	github.com/rs/cors v1.7.0 // indirect
 	github.com/stretchr/testify v1.5.1
