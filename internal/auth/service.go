@@ -39,7 +39,8 @@ type Service struct {
 	sessionsTx    SessionTxFunc
 }
 
-func NewService(users UsersRepository, pwdComparator PwdComparator, tokenMaker TokenMaker, sessionsTx SessionTxFunc) *Service {
+func NewService(users UsersRepository, pwdComparator PwdComparator, tokenMaker TokenMaker,
+	sessionsTx SessionTxFunc) *Service {
 	return &Service{users: users, pwdComparator: pwdComparator, tokenMaker: tokenMaker, sessionsTx: sessionsTx}
 }
 
@@ -79,7 +80,7 @@ func (s *Service) Refresh(ctx context.Context, r *auth.RefreshRequest) (*auth.Re
 	var tks *domain.Tokens
 
 	err = s.sessionsTx(ctx, func(r SessionsRepository) error {
-		if err := r.Close(ctx, claims.SessionID); err != nil {
+		if err = r.Close(ctx, claims.SessionID); err != nil {
 			return fmt.Errorf("failed close session %s: %w", claims.SessionID, err)
 		}
 

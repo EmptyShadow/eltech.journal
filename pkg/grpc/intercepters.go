@@ -3,9 +3,9 @@ package grpc
 import (
 	"context"
 	"errors"
-	"github.com/EmptyShadow/eltech.journal/pkg/ulid"
 	"time"
 
+	"github.com/EmptyShadow/eltech.journal/pkg/ulid"
 	"github.com/gogo/protobuf/proto"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"

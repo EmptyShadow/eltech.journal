@@ -4,11 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/gogo/protobuf/types"
-	"github.com/jackc/pgx/v4"
 	"time"
 
 	"github.com/EmptyShadow/eltech.journal/api/domain"
+	"github.com/gogo/protobuf/types"
+	"github.com/jackc/pgx/v4"
 )
 
 type Sessions struct {

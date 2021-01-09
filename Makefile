@@ -4,7 +4,7 @@ gen:
 
 # работа с гошным кодом
 go-lint:
-	@docker run --rm -v $(pwd):/app -w /app golangci/golangci-lint:v1.31.0 golangci-lint run
+	@docker run --rm -v "${PWD}":/app -w /app golangci/golangci-lint:v1.33-alpine golangci-lint run
 
 new-migrate:
 	@migrate create -ext sql -dir migrations ${name}

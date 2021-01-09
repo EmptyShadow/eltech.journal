@@ -54,6 +54,7 @@ const (
 	envAssessTokenLifeTime     = "JWT_ACCESS_TOKEN_LIFE_TIME"
 	defaultAssessTokenLifeTime = time.Hour * 24
 
+	// nolint:gosec // нет особых параметров.
 	envRefreshTokenLifeTime     = "JWT_REFRESH_TOKEN_LIFE_TIME"
 	defaultRefreshTokenLifeTime = time.Hour * 24 * 7
 
