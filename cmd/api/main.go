@@ -100,8 +100,8 @@ func sessionsTxFunc(pgdb *pgxpool.Pool) auth.SessionTxFunc {
 }
 
 type servers struct {
-	grpcServer                   *grpc.Server
-	pprofServer, http2GRPCServer *httpsrc.Server
+	api                             *grpc.Server
+	pprofServer, http2GRPCAPIServer *httpsrc.Server
 }
 
 func initServers(l *zap.Logger, ca *adapters) *servers {
@@ -110,7 +110,7 @@ func initServers(l *zap.Logger, ca *adapters) *servers {
 	claimsExporter := auth.NewClaimsExportInterceptor(ca.tokenManager, ca.sessionsRepo,
 		config.Get(envAuthTokenHeader).String(defaultAuthTokenHeader))
 
-	c.grpcServer = grpc.NewServer(grpc.ServingAddr(config.Get(envGRPCAPIAddr).String(apiGRPCAddr)),
+	c.api = grpc.NewServer(grpc.ServingAddr(config.Get(envGRPCAPIAddr).String(apiGRPCAddr)),
 		grpc.Options(grpcsrc.ChainUnaryInterceptor(
 			grpc.UnaryServerErrorUnwrap,
 			grpc.UnaryServerLogger(l),
@@ -119,7 +119,7 @@ func initServers(l *zap.Logger, ca *adapters) *servers {
 
 	c.pprofServer = pprof.HTTPServer(http.ServingAddr(config.Get(envPprofAddr).String(pprofAddr)))
 
-	c.http2GRPCServer = http.NewServer(grpcweb.WrapServer(c.grpcServer.Server),
+	c.http2GRPCAPIServer = http.NewServer(grpcweb.WrapServer(c.api.Server),
 		http.ServingAddr(config.Get(envHTTPAPIAddr).String(apiHTTPAddr)))
 
 	return c
@@ -133,6 +133,7 @@ func main() {
 
 	l.Info("init integrations")
 	ci := initIntegrations()
+	defer ci.close()
 
 	l.Info("init adapters")
 	ca := initAdapters(ci)
@@ -144,8 +145,8 @@ func main() {
 	cserv := initServers(l, ca)
 
 	l.Info("registration grpc services")
-	apiusers.RegisterUsersServer(cserv.grpcServer.Server, csvc.usersSvc)
-	apiauth.RegisterAuthServer(cserv.grpcServer.Server, csvc.authSvc)
+	apiusers.RegisterUsersServer(cserv.api.Server, csvc.usersSvc)
+	apiauth.RegisterAuthServer(cserv.api.Server, csvc.authSvc)
 
 	l.Info("start app")
 	defer l.Info("stop app")
@@ -153,9 +154,9 @@ func main() {
 	shutdown.PanicIfErr(
 		parallel.Run(ctx,
 			shutdown.NotifySignals,
-			grpc.RunServer(cserv.grpcServer),
+			grpc.RunServer(cserv.api),
 			http.RunServer(cserv.pprofServer),
-			http.RunServer(cserv.http2GRPCServer),
+			http.RunServer(cserv.http2GRPCAPIServer),
 		),
 	)
 }
