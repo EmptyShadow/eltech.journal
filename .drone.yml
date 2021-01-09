@@ -91,6 +91,8 @@ steps:
       PGUSER: testuser
       PGPASSWORD: password
       PGSSLMODE: disable
+      JWT_ISSUER: e2e-tester
+      JWT_PRIVATE_KEY: private_key
     depends_on:
       - unit-tests
       - integration-tests
