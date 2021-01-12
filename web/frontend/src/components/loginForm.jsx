@@ -1,75 +1,62 @@
 import React from 'react';
-import { Form, Input, Button, Typography } from 'antd';
+import { Form, Input, Button } from 'antd';
+import { Link } from 'react-router-dom';
 
 import './form.css';
-
-    const { Title } = Typography;
-
-    const layout = {
-        labelCol: {
-            span: 8,
-        },
-        wrapperCol: {
-            span: 8,
-        },
-    };
-
-    const tailLayout = {
-        wrapperCol: {
-            offset: 8,
-            span: 8,
-        },
-    };
 
 const LoginForm = () => {
 
     return (
+        <React.Fragment>
+            <div className="auth__top">
+                <h2>Войти в аккаунт</h2>
+            </div>
+            <Form
+                className={'form-login'}
 
-        <Form
-            className={'form-login'}
-            {...layout}
-            name="basic"
-        >
-            <Form.Item {...tailLayout}>
-                <Title level={4}>Войти в аккаунт</Title>
-            </Form.Item>
-
-            <Form.Item
-                label="Логин"
-                name="login"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Введите логин!',
-                    },
-                ]}
+                name="basic"
             >
-                <Input/>
-            </Form.Item>
-            <Form.Item
-                label="Пароль"
-                name="password"
-                rules={[
-                    {
-                        required: true,
-                        message: 'Введите пароль!',
-                    },
-                ]}
-            >
-                <Input.Password/>
-            </Form.Item>
-            <Form.Item {...tailLayout}>
-                <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                        Войти
-                    </Button>
 
-                    <Button style={{ margin: '0 8px' }}>
-                        Зарегистрироваться
-                    </Button>
+                <Form.Item
+                    name="login"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Введите логин',
+                        },
+                    ]}
+                >
+                    <Input
+                        placeholder={'Логин'}
+                    />
                 </Form.Item>
-            </Form.Item>
-        </Form>
+                <Form.Item
+                    name="password"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Введите пароль',
+                        },
+                    ]}
+                >
+                    <Input.Password
+                        placeholder={'Пароль'}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <Form.Item>
+                        <Button type="primary" htmlType="submit">
+                            Войти
+                        </Button>
+
+                        <Link to={'/signup'} style={{margin: '0 10px'}}>
+                            Зарегистрироваться
+                        </Link>
+
+                    </Form.Item>
+                </Form.Item>
+            </Form>
+        </React.Fragment>
     );
 }
 

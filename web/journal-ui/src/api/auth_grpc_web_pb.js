@@ -1,5 +1,5 @@
 /**
- * @fileoverview gRPC-Web generated client stub for github.com.EmptyShadow.eltech.journal.api
+ * @fileoverview gRPC-Web generated frontend stub for github.com.EmptyShadow.eltech.journal.api
  * @enhanceable
  * @public
  */
@@ -39,7 +39,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.AuthClient =
   options['format'] = 'text';
 
   /**
-   * @private @const {!grpc.web.GrpcWebClientBase} The client
+   * @private @const {!grpc.web.GrpcWebClientBase} The frontend
    */
   this.client_ = new grpc.web.GrpcWebClientBase(options);
 
@@ -65,7 +65,7 @@ proto.github.com.EmptyShadow.eltech.journal.api.AuthPromiseClient =
   options['format'] = 'text';
 
   /**
-   * @private @const {!grpc.web.GrpcWebClientBase} The client
+   * @private @const {!grpc.web.GrpcWebClientBase} The frontend
    */
   this.client_ = new grpc.web.GrpcWebClientBase(options);
 
