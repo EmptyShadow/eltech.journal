@@ -1,7 +1,7 @@
 import React from 'react';
 import {Route, Redirect, Switch} from 'react-router-dom';
 
-import { Auth } from './pages';
+import { Auth, Home } from './pages';
 
 function App() {
     return (
@@ -14,7 +14,7 @@ function App() {
                 />
                 <Route
                     path="/"
-                    render={() => <Redirect to="/signin" />}
+                    render={() =>  <Home />}
                 />
             </Switch>
         </div>
