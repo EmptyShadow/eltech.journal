@@ -4,12 +4,17 @@
 ## Table of Contents
 
 - [domain.proto](#domain.proto)
+    - [Admin](#github.com.EmptyShadow.eltech.journal.api.Admin)
     - [Claims](#github.com.EmptyShadow.eltech.journal.api.Claims)
     - [Credentials](#github.com.EmptyShadow.eltech.journal.api.Credentials)
     - [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName)
+    - [PageParams](#github.com.EmptyShadow.eltech.journal.api.PageParams)
     - [Session](#github.com.EmptyShadow.eltech.journal.api.Session)
     - [Tokens](#github.com.EmptyShadow.eltech.journal.api.Tokens)
     - [User](#github.com.EmptyShadow.eltech.journal.api.User)
+  
+    - [ProfileStatus](#github.com.EmptyShadow.eltech.journal.api.ProfileStatus)
+    - [Role](#github.com.EmptyShadow.eltech.journal.api.Role)
   
 - [Scalar Value Types](#scalar-value-types)
 
@@ -22,10 +27,30 @@
 
 
 
+<a name="github.com.EmptyShadow.eltech.journal.api.Admin"></a>
+
+### Admin
+Профиль админа.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| User | [User](#github.com.EmptyShadow.eltech.journal.api.User) |  | Пользователь которому принадлежит профиль. |
+| ContactInformation | [string](#string) |  | Контактная информация об админе, то есть та информация, которой будет достаточно для возможности связи с ним. |
+| Status | [ProfileStatus](#github.com.EmptyShadow.eltech.journal.api.ProfileStatus) |  | Статус профиля. |
+| BlockReason | [string](#string) |  | Причина по которой профиль получил статус BLOCKED. |
+| CreatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата время создания профиля. |
+| UpdatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата время обновления профиля. |
+
+
+
+
+
+
 <a name="github.com.EmptyShadow.eltech.journal.api.Claims"></a>
 
 ### Claims
-Claims утверждения зашитые в jwt токен.
+Утверждения зашитые в jwt токен.
 
 
 | Field | Type | Label | Description |
@@ -65,6 +90,22 @@ Claims утверждения зашитые в jwt токен.
 | FirstName | [string](#string) |  | Имя. |
 | MiddleName | [string](#string) |  | Отчество, не обязательное поле. |
 | LastName | [string](#string) |  | Фамилия. |
+
+
+
+
+
+
+<a name="github.com.EmptyShadow.eltech.journal.api.PageParams"></a>
+
+### PageParams
+Параметры для страницы извлекаемых данных.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Limit | [uint32](#uint32) |  | Количество извлекаемых записей. |
+| Offset | [uint32](#uint32) |  | Смещение относительно начала списка всех данных. |
 
 
 
@@ -117,6 +158,7 @@ Claims утверждения зашитые в jwt токен.
 | Email | [string](#string) |  | Электронная почта. |
 | Pwd | [bytes](#bytes) |  | Соленный пароль. |
 | FullName | [FullName](#github.com.EmptyShadow.eltech.journal.api.FullName) |  | Полное имя. |
+| Roles | [Role](#github.com.EmptyShadow.eltech.journal.api.Role) | repeated | Роли которые есть у пользователя. |
 | CreatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата создания записи. |
 | UpdatedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата обновление полей записи. |
 | DeletedAt | [google.protobuf.Timestamp](#google.protobuf.Timestamp) |  | Дата удаления записи. |
@@ -126,6 +168,33 @@ Claims утверждения зашитые в jwt токен.
 
 
  
+
+
+<a name="github.com.EmptyShadow.eltech.journal.api.ProfileStatus"></a>
+
+### ProfileStatus
+Статус в котором может быть профиль.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ON_VALIDATE | 0 | Профиль находится на валидации и его действия не будут работать. |
+| ACTIVE | 1 | Профиль активирован. |
+| DISABLE | 2 | Профиль выключен. |
+| BLOCKED | 3 | Профиль заблокирован. |
+
+
+
+<a name="github.com.EmptyShadow.eltech.journal.api.Role"></a>
+
+### Role
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ADMIN | 0 |  |
+| STUDENT | 1 |  |
+| TEACHER | 2 |  |
+
 
  
 
