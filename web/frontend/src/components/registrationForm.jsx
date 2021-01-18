@@ -1,8 +1,8 @@
 import React from 'react';
 import { Form, Input, Button } from 'antd';
-
-import './form.css';
 import {Link} from "react-router-dom";
+
+import './style.css';
 
 const RegistrationForm = () => {
     return (
