@@ -1,0 +1,8 @@
+BEGIN TRANSACTION;
+
+DROP TABLE IF EXISTS journal_item_result_comment;
+DROP TABLE IF EXISTS journal_item_results;
+DROP TABLE IF EXISTS journal_items;
+DROP TABLE IF EXISTS journals;
+
+COMMIT TRANSACTION;
