@@ -6,27 +6,38 @@ import { BrowserRouter as Router,
     Link} from "react-router-dom";
 
 import './home.css';
-import Statement from "./components/statement";
+import Statement from "./components/statement/statement";
+import Profile from "./components/profile/profile";
+import Admin from "./components/admin/admin";
 
 const { Header} = Layout;
 
-const Home = (user) => {
+const Home = () => {
     return (
     <Router>
         <Layout style={{ minHeight: '100vh' }}>
             <Header className={'header'}>
-                <Menu theme="dark" mode="horizontal" className={'menu'}>
+                <Menu theme="dark" mode="horizontal" className={'menu'} defaultSelectedKeys={['2']}>
                     <Menu.Item key={'1'}>
-                        <Link to={'/statement'}>Ведомости</Link>
+                        <Link to={'/admin'}>Управление</Link>
                     </Menu.Item>
                     <Menu.Item key={'2'}>
-                        <Link to={'/account'}>Профиль</Link>
+                        <Link to={'/statement'}>Ведомости</Link>
+                    </Menu.Item>
+                    <Menu.Item key={'3'}>
+                        <Link to={'/profile'}>Профиль</Link>
                     </Menu.Item>
                 </Menu>
             </Header>
             <Switch>
+                <Route path={'/profile'}>
+                    <Profile />
+                </Route>
                 <Route path={'/statement'}>
                     <Statement />
+                </Route>
+                <Route path={'/admin'}>
+                    <Admin />
                 </Route>
             </Switch>
         </Layout>

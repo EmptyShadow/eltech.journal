@@ -13,9 +13,11 @@ function App() {
                     component={Auth}
                 />
                 <Route
-                    path="/"
+                    exact
+                    path="/statement"
                     render={() =>  <Home />}
                 />
+                <Redirect from='/' to='/statement'/>
             </Switch>
         </div>
     );
