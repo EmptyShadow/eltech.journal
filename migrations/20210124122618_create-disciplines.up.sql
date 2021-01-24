@@ -1,0 +1,9 @@
+BEGIN TRANSACTION;
+
+CREATE TABLE IF NOT EXISTS disciplines
+(
+    id   serial PRIMARY KEY,
+    name varchar(256) NOT NULL UNIQUE
+);
+
+COMMIT TRANSACTION;

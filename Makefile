@@ -7,7 +7,7 @@ go-lint:
 	@docker run --rm -v "${PWD}":/app -w /app golangci/golangci-lint:v1.33-alpine golangci-lint run
 
 new-migrate:
-	@migrate create -ext sql -dir migrations ${name}
+	@docker run --rm -u "$(id -u)":"$(id -g)" -v "${PWD}"/migrations:/migrations migrate/migrate create -ext sql -dir /migrations ${name}
 
 # работа с dev локальным кластером
 run-dev:
