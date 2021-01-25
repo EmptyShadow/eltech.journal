@@ -2,20 +2,39 @@ import React from 'react';
 import {Route, Redirect, Switch} from 'react-router-dom';
 
 import { Auth, Home } from './pages';
+import Admin from "./pages/home/components/admin/admin";
 
 function App() {
+    const [user, setUser] = React.useState({
+        id: Math.random(),
+        surname: 'Петров',
+        firstName: 'Петр',
+        secondName: 'Петрович',
+        role: 'student'
+    })
+
+    const onEdit = () => {
+        setUser({
+            id: Math.random(),
+            surname: 'Петров',
+            firstName: 'Петр',
+            secondName: 'Петрович',
+            role: 'student'
+        })
+    }
+
     return (
         <div className="app">
             <Switch>
                 <Route
                     exact
                     path={["/signin", "/signup"]}
-                    component={Auth}
+                    render={() => <Auth user={user} onEdit={onEdit} />}
                 />
                 <Route
                     exact
                     path="/statement"
-                    render={() =>  <Home />}
+                    render={() => user.id ? <Home user={user} /> : <Redirect to={'/signin'} />}
                 />
                 <Redirect from='/' to='/statement'/>
             </Switch>

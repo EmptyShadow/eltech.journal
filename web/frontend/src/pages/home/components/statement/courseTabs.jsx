@@ -5,16 +5,16 @@ import MarkTables from "./markTables";
 
 const { TabPane } = Tabs;
 
-const CourseTabs = () => {
+const CourseTabs = ({role}) => {
     return (
 
             <Card style={{height: '100vh'}}>
             <Tabs defaultActiveKey="1">
                 <TabPane tab={'Задания'} key="1">
-                  <CoursesTable />
+                  <CoursesTable role={role} />
                 </TabPane>
                 <TabPane tab={'Оценки'} key="2">
-                  <MarkTables />
+                  <MarkTables role={role} />
                 </TabPane>
             </Tabs>
             </Card>

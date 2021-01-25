@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import './style.css';
 
-const LoginForm = () => {
+const LoginForm = (user, onEdit) => {
 
     return (
         <React.Fragment>
@@ -45,7 +45,7 @@ const LoginForm = () => {
                 </Form.Item>
                 <Form.Item>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit">
+                        <Button onClick={onEdit} type="primary" htmlType="submit">
                             Войти
                         </Button>
 

@@ -9,8 +9,13 @@ const columns = [
     },
     {
         title: 'Роль',
-        dataIndex: 'position',
-        key: 'position'
+        dataIndex: 'role',
+        key: 'role'
+    },
+    {
+        title: 'Группа',
+        dataIndex: 'group',
+        key: 'group',
     },
     {
         title: 'E-mail',
@@ -23,25 +28,29 @@ const dataSource = [
     {
         key: '1',
         name: 'Бердникова Евгения Викторовна',
-        position: 'Студент',
+        role: 'Студент',
+        group: '5302',
         email: 'asd@hdsjd.com'
     },
     {
         key: '2',
         name: 'Неботов Дмитрий Сергеевич',
-        position: 'Студент',
+        role: 'Студент',
+        group: '5302',
         email: 'asd@hdsjd.com'
     },
     {
         key: '3',
         name: 'Ларин Роман Сергеевич',
-        position: 'Студент',
+        role: 'Студент',
+        group: '5302',
         email: 'asd@hdsjd.com'
     },
     {
         key: '5',
         name: 'Кузьмин Сергей Алексеевич',
-        position: 'Преподаватель',
+        role: 'Преподаватель',
+        group: '-',
         email: 'asd@hdsjd.com'
     }
 ];

@@ -3,11 +3,10 @@ import { Layout, Menu } from "antd";
 
 import '../../../../components/style.css';
 import CourseTabs from "./courseTabs";
-import {Route} from "react-router-dom";
 
 const { Content, Sider } = Layout;
 
-const Statement = () => {
+const Statement = ({role}) => {
     const courses = [
         {
             id: '1',
@@ -37,7 +36,7 @@ const Statement = () => {
                 </Menu>
             </Sider>
             <Content style={{margin: '20px 16px'}}>
-                    <CourseTabs course={selectedCourse}/>
+                    <CourseTabs courses={courses} role={role}/>
             </Content>
         </Layout>
     );

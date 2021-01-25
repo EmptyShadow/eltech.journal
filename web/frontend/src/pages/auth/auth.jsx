@@ -6,10 +6,10 @@ import RegistrationForm from '../../components/registrationForm';
 
 import "./auth.css";
 
-const Auth = () => (
+const Auth = (user, onEdit) => (
     <section className="auth">
         <div className="auth__content">
-            <Route exact path="/signin" component={LoginForm} />
+            <Route exact path="/signin" render={() => <LoginForm user={user} onEdit={onEdit} />} />
             <Route exact path="/signup" component={RegistrationForm} />
         </div>
     </section>

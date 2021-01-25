@@ -1,7 +1,7 @@
 import React from 'react';
 import {Space, Table, Modal, Form, Input, InputNumber, Button} from "antd";
 
-const MarkTables = () => {
+const MarkTables = ({role}) => {
     const columnsMark = [
         {
             title: 'Студент',
@@ -13,20 +13,22 @@ const MarkTables = () => {
             dataIndex: 'mark',
             key: 'mark',
             editable: true
-        },
-        {
-            title: 'Действия',
-            key: 'action',
-            render: (data) => (
-                <Space size="middle">
-                    <a onClick={() => {
-                        setSelectedStudent(data)
-                        onEdit()
-                    }} key={'edit'}>Изменить</a>
-                </Space>
-            ),
-        },
+        }
     ]
+
+    const columnsDataMark = role==='teacher' ? [...columnsMark, {
+        title: 'Действия',
+        key: 'action',
+        render: (data) => (
+            <Space size="middle">
+                <a onClick={() => {
+                    setSelectedStudent(data)
+                    onEdit()
+                }} key={'edit'}>Изменить</a>
+            </Space>
+        ),
+    }] : columnsMark;
+
 
     const [isVisible, setIsVisible] = React.useState(false);
     const [selectedStudent, setSelectedStudent] = React.useState({})
@@ -73,7 +75,7 @@ const MarkTables = () => {
     return (
         <React.Fragment>
             <Table
-                columns={columnsMark}
+                columns={columnsDataMark}
                 dataSource={dataSourceMark}
             />
 

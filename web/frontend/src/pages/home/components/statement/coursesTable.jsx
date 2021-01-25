@@ -1,14 +1,17 @@
 import React from 'react';
 import {Drawer, Button, DatePicker, Form, Input, Modal, Select, Space, Table, Tag} from "antd";
-import moment from "moment";
 import Task from "./Task";
+import moment from 'moment';
+import Response from "./response";
 
 const { Option } = Select;
+const { TextArea } = Input;
+
 const dateFormat = 'DD.MM.YYYY';
 const children = ['5301', '5302', '5303', '5304', '5306', '5307', '5308'];
 
-const CoursesTable = () => {
-    const columnsTask = [
+const CoursesTable = ({courses, role}) => {
+    let columnsTask = [
         {
             title: 'Задание',
             dataIndex: 'task',
@@ -48,36 +51,48 @@ const CoursesTable = () => {
                         setSelectedTask(data);
                         openDrawer(data);
                     }} key={'full'}>Подробно</a>
-                    <a onClick={() => onDelete(data)} key={'delete'}>Удалить</a>
+                    { role === 'teacher' && <a onClick={() => setIsVisibleTeacherDrawer(true)} key={'teachersDrawer'}>Ответы</a> }
+                    { role === 'teacher' &&   <a onClick={() => onDelete(data)} key={'delete'}>Удалить</a> }
                 </Space>
             ),
         },
     ];
+
+    columnsTask = role !== 'student' ? columnsTask : [...columnsTask, {
+        title: 'Оценка',
+        dataIndex: 'mark',
+        key: 'mark'
+    }]
     const [dataSourceTask, setDataSourceTask] = React.useState([
         {
             key: '1',
             task: 'Исследование систем',
             type: 'Курсовая работа',
             deadline: '10.01.2021',
-            groups: ['5301']
+            groups: ['5301'],
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip'
         },
         {
             key: '2',
             task: 'Лабораторная работа',
             type: 'Лабораторная работа',
             deadline: '14.01.2021',
-            groups: ['5301', '5302']
+            groups: ['5301', '5302'],
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut.'
         }
     ]);
     const [isCreateVisible, setIsCreateVisible] = React.useState(false);
-    const [selectedTask, setSelectedTask] = React.useState({
+    const [newTask, setNewTask] = React.useState({
         key: '',
         task: '',
         type: '',
         deadline: '',
-        groups: []
+        groups: [],
+        description: ''
     });
     const [isVisibleDrawer, setIsVisibleDrawer] = React.useState(false);
+    const [selectedTask, setSelectedTask] = React.useState({});
+    const [isVisibleTeacherDrawer, setIsVisibleTeacherDrawer] = React.useState(false)
 
     const openDrawer = () => {
         setIsVisibleDrawer(true)
@@ -88,13 +103,13 @@ const CoursesTable = () => {
     }
 
     const onCreate = () => {
-        setSelectedTask({
-            ...selectedTask,
+        setNewTask({
+            ...newTask,
             key: Math.random()
         });
 
-        setDataSourceTask([...dataSourceTask, selectedTask]);
-        setSelectedTask({
+        setDataSourceTask([...dataSourceTask, newTask]);
+        setNewTask({
                 key: '',
                 task: '',
                 type: '',
@@ -106,30 +121,37 @@ const CoursesTable = () => {
     }
 
     const handleInputName = (event) => {
-        setSelectedTask({
-            ...selectedTask,
+        setNewTask({
+            ...newTask,
             task: event.target.value
         });
     }
 
     const handleSelect = (value) => {
-        setSelectedTask({
-            ...selectedTask,
+        setNewTask({
+            ...newTask,
             type: value
         });
     }
 
     const handleDate = (date, dateString) => {
-        setSelectedTask({
-            ...selectedTask,
+        setNewTask({
+            ...newTask,
             deadline: dateString
         });
     }
 
     const handleGroupSelect = (value) => {
-        setSelectedTask({
-            ...selectedTask,
+        setNewTask({
+            ...newTask,
             groups: value
+        });
+    }
+
+    const handleDescription = (event) => {
+        setNewTask({
+            ...newTask,
+            description: event.target.value
         });
     }
 
@@ -139,7 +161,7 @@ const CoursesTable = () => {
                 columns={columnsTask}
                 dataSource={dataSourceTask}
                 bordered
-                footer={() => <Button onClick={() => setIsCreateVisible(true)}>Добавить задание</Button>}
+                footer={() => role === 'teacher' ? <Button onClick={() => setIsCreateVisible(true)}>Добавить задание</Button> : ''}
             />
 
             <Modal title={'Новое задание'}
@@ -160,12 +182,12 @@ const CoursesTable = () => {
                     <Form.Item name="task">
                         <Input
                             placeholder={'Название задания'}
-                            value={selectedTask.task}
+                            value={newTask.task}
                             onChange={handleInputName}/>
                     </Form.Item>
                     <Form.Item>
                         <Select
-                            value={selectedTask.type}
+                            value={newTask.type}
                             onChange={handleSelect}
                             placeholder={'Тип задания'}
                         >
@@ -178,7 +200,7 @@ const CoursesTable = () => {
                         <DatePicker
                             placeholder={'Деделайн'}
                             format={dateFormat}
-                            value={selectedTask.deadline ? moment(selectedTask.deadline, dateFormat) : selectedTask.deadline}
+                            value={newTask.deadline ? moment(newTask.deadline, dateFormat) : newTask.deadline}
                             onChange={handleDate}
                         />
                     </Form.Item>
@@ -195,6 +217,9 @@ const CoursesTable = () => {
                             }
                         </Select>
                     </Form.Item>
+                    <Form.Item>
+                        <TextArea rows={4} value={newTask.description} onChange={handleDescription} />
+                    </Form.Item>
                 </Form>
             </Modal>
 
@@ -205,8 +230,21 @@ const CoursesTable = () => {
                 closable
                 onClose={() => setIsVisibleDrawer(false)}
                 visible={isVisibleDrawer}
+
             >
-              <Task {...selectedTask} />
+              <Task task={selectedTask} role={role}  />
+            </Drawer>
+            <Drawer
+                title={'Ответы'}
+                width={400}
+                placement={'right'}
+                closable
+                onClose={() => setIsVisibleTeacherDrawer(false)}
+                visible={isVisibleTeacherDrawer}
+
+            >
+
+                <Response />
             </Drawer>
         </React.Fragment>
     );

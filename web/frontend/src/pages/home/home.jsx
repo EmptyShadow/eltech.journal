@@ -9,19 +9,18 @@ import './home.css';
 import Statement from "./components/statement/statement";
 import Profile from "./components/profile/profile";
 import Admin from "./components/admin/admin";
-import Task from "./components/statement/Task";
 
 const { Header} = Layout;
 
-const Home = () => {
+const Home = ({user}) => {
     return (
     <Router>
         <Layout style={{ minHeight: '100vh' }}>
             <Header className={'header'}>
                 <Menu theme="dark" mode="horizontal" className={'menu'} defaultSelectedKeys={['2']}>
-                    <Menu.Item key={'1'}>
+                    {user.role === 'teacher' && <Menu.Item key={'1'}>
                         <Link to={'/admin'}>Управление</Link>
-                    </Menu.Item>
+                    </Menu.Item>}
                     <Menu.Item key={'2'}>
                         <Link to={'/statement'}>Ведомости</Link>
                     </Menu.Item>
@@ -35,7 +34,7 @@ const Home = () => {
                     <Profile />
                 </Route>
                 <Route exact path={'/statement'}>
-                    <Statement />
+                    <Statement role={user.role} />
                 </Route>
                 <Route path={'/admin'}>
                     <Admin />
