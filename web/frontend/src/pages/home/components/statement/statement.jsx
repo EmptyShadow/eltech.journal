@@ -3,15 +3,16 @@ import { Layout, Menu } from "antd";
 
 import '../../../../components/style.css';
 import CourseTabs from "./courseTabs";
+import {Route} from "react-router-dom";
 
 const { Content, Sider } = Layout;
 
 const Statement = () => {
     const courses = [
         {
-        id: '1',
-        name: 'Сетевое Web-программирование'
-         },
+            id: '1',
+            name: 'Сетевое Web-программирование'
+        },
         {
             id: '2',
             name: 'Технологии Искусственного интеллекта'
@@ -19,7 +20,7 @@ const Statement = () => {
     const [selectedCourse, setSelectedCourse] = React.useState(courses[0])
     return (
         <Layout style={{height: '100%'}}>
-            <Sider width={200} className="site-layout-background"  >
+            <Sider width={200} className="site-layout-background">
                 <Menu
                     mode="inline"
                     defaultSelectedKeys={selectedCourse.id}
@@ -32,10 +33,11 @@ const Statement = () => {
                         >
                             {course.name}
                         </Menu.Item>)}
+
                 </Menu>
             </Sider>
-            <Content style={{ margin: '20px 16px' }}>
-                <CourseTabs course={selectedCourse} />
+            <Content style={{margin: '20px 16px'}}>
+                    <CourseTabs course={selectedCourse}/>
             </Content>
         </Layout>
     );

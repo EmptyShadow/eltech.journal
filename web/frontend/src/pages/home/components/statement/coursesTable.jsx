@@ -1,6 +1,7 @@
 import React from 'react';
-import {Button, DatePicker, Form, Input, Modal, Select, Space, Table, Tag} from "antd";
+import {Drawer, Button, DatePicker, Form, Input, Modal, Select, Space, Table, Tag} from "antd";
 import moment from "moment";
+import Task from "./Task";
 
 const { Option } = Select;
 const dateFormat = 'DD.MM.YYYY';
@@ -43,6 +44,10 @@ const CoursesTable = () => {
             key: 'action',
             render: (data) => (
                 <Space size="middle">
+                    <a onClick={() => {
+                        setSelectedTask(data);
+                        openDrawer(data);
+                    }} key={'full'}>Подробно</a>
                     <a onClick={() => onDelete(data)} key={'delete'}>Удалить</a>
                 </Space>
             ),
@@ -72,6 +77,11 @@ const CoursesTable = () => {
         deadline: '',
         groups: []
     });
+    const [isVisibleDrawer, setIsVisibleDrawer] = React.useState(false);
+
+    const openDrawer = () => {
+        setIsVisibleDrawer(true)
+    };
 
     const onDelete = (data) => {
         setDataSourceTask(dataSourceTask.filter(item => item.key !== data.key));
@@ -122,6 +132,7 @@ const CoursesTable = () => {
             groups: value
         });
     }
+
     return (
         <React.Fragment>
             <Table
@@ -130,7 +141,7 @@ const CoursesTable = () => {
                 bordered
                 footer={() => <Button onClick={() => setIsCreateVisible(true)}>Добавить задание</Button>}
             />
-            {isCreateVisible &&
+
             <Modal title={'Новое задание'}
                    visible={isCreateVisible}
                    onCancel={() => setIsCreateVisible(false)}
@@ -185,7 +196,18 @@ const CoursesTable = () => {
                         </Select>
                     </Form.Item>
                 </Form>
-            </Modal>}
+            </Modal>
+
+            <Drawer
+                title={'Задание'}
+                width={720}
+                placement={'right'}
+                closable
+                onClose={() => setIsVisibleDrawer(false)}
+                visible={isVisibleDrawer}
+            >
+              <Task {...selectedTask} />
+            </Drawer>
         </React.Fragment>
     );
 }

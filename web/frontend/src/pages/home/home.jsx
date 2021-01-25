@@ -9,6 +9,7 @@ import './home.css';
 import Statement from "./components/statement/statement";
 import Profile from "./components/profile/profile";
 import Admin from "./components/admin/admin";
+import Task from "./components/statement/Task";
 
 const { Header} = Layout;
 
@@ -33,7 +34,7 @@ const Home = () => {
                 <Route path={'/profile'}>
                     <Profile />
                 </Route>
-                <Route path={'/statement'}>
+                <Route exact path={'/statement'}>
                     <Statement />
                 </Route>
                 <Route path={'/admin'}>
