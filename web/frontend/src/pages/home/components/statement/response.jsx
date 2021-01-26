@@ -7,6 +7,28 @@ const { TextArea } = Input;
 
 const Response = () => {
     const [isVisible, setIsVisible] = React.useState(false)
+    const [isVisibleResponse, setIsVisibleResponse] = React.useState(false)
+    const [response, setResponse] = React.useState({
+        comment: '',
+        mark: ''
+    });
+
+    const handleComment = (event) => {
+        setResponse({
+                ...response,
+                comment: event.target.value,
+            }
+        )
+    }
+
+    const handleMark = (value) => {
+        setResponse({
+                ...response,
+                mark: value,
+            }
+        )
+    }
+
     return (
         <React.Fragment>
             <List
@@ -72,25 +94,38 @@ const Response = () => {
                     />
                 </Row>
                 <Divider/>
-                <Form>
+                {!isVisibleResponse && <Form>
                     <Form.Item>
                         <Title level={5}>Ответ преподавателя</Title>
                         <Divider/>
                     </Form.Item>
                     <Form.Item>
                         <p>Комментарий:</p>
-                        <TextArea rows={4}/>
+                        <TextArea rows={4} value={response.comment} onChange={handleComment}/>
                     </Form.Item>
                     <Form.Item>
                         <DescriptionItem
                             title={'Оценка'}
-                            content={<InputNumber min={0} max={5} />}
+                            content={<InputNumber min={0} max={5} value={response.mark} onChange={handleMark} />
+                            }
                         />
                     </Form.Item>
                     <Form.Item>
-                        <Button key="submit" type="primary">Сохранить комментарий</Button>
+                        <Button onClick={() => setIsVisibleResponse(true)} key="submit" type="primary">Сохранить комментарий</Button>
                     </Form.Item>
-                </Form>
+                </Form>}
+                {isVisibleResponse &&
+                <React.Fragment>
+                    <DescriptionItem
+                        title={'Комментарий'}
+                        content={response.comment}
+                    />
+                    <DescriptionItem
+                        title={'Оценка'}
+                        content={response.mark}
+                    />
+                </React.Fragment>
+                }
             </Drawer>
         </React.Fragment>
 

@@ -46,7 +46,9 @@ const LoginForm = (user, onEdit) => {
                 <Form.Item>
                     <Form.Item>
                         <Button onClick={onEdit} type="primary" htmlType="submit">
-                            Войти
+                            <Link to={'/statement'}>
+                                Войти
+                            </Link>
                         </Button>
 
                         <Link to={'/signup'} style={{margin: '0 10px'}}>

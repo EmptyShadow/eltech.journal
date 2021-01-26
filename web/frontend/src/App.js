@@ -2,7 +2,6 @@ import React from 'react';
 import {Route, Redirect, Switch} from 'react-router-dom';
 
 import { Auth, Home } from './pages';
-import Admin from "./pages/home/components/admin/admin";
 
 function App() {
     const [user, setUser] = React.useState({
@@ -10,7 +9,7 @@ function App() {
         surname: 'Петров',
         firstName: 'Петр',
         secondName: 'Петрович',
-        role: 'student'
+        role: 'teacher'
     })
 
     const onEdit = () => {

@@ -60,7 +60,6 @@ const Users = () => {
         <Table
             columns={columns}
             dataSource={dataSource}
-            footer={() => <Button>Добавить пользователя</Button>}
         />
     );
 }

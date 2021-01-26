@@ -36,22 +36,22 @@ const MarkTables = ({role}) => {
         {
             key: '32',
             student: 'Бердникова Евгения Викторовна',
-            mark: '5'
+            mark: ''
         },
         {
             key: '243',
             student: 'Неботов Дмитрий Сергеевич',
-            mark: '5'
+            mark: ''
         },
         {
             key: '23',
             student: 'Ларин Роман Сергеевич',
-            mark: '5'
+            mark: ''
         },
         {
             key: '3223',
             student: 'Петров Петр Петрович',
-            mark: '4'
+            mark: ''
         }
     ]);
 

@@ -6,6 +6,28 @@ const { TextArea } = Input;
 const { Title } = Typography;
 
 const Task = ({task, role}) => {
+    const [isVisibleResponse, setIsVisibleResponse] = React.useState(false)
+    const [response, setResponse] = React.useState({
+        comment: '',
+        link: ''
+    });
+
+    const handleComment = (event) => {
+        setResponse({
+                ...response,
+                comment: event.target.value,
+            }
+        )
+    }
+
+    const handleLink = (event) => {
+        setResponse({
+                ...response,
+                link: event.target.value,
+            }
+        )
+    }
+
     return (
         <React.Fragment>
             <DescriptionItem
@@ -33,7 +55,7 @@ const Task = ({task, role}) => {
                 />
             </Row>
             <Divider/>
-            {role === 'student' &&
+            {role === 'student' && !isVisibleResponse &&
             <Form>
                 <Form.Item>
                     <Title level={5}>Ответ студента</Title>
@@ -41,16 +63,36 @@ const Task = ({task, role}) => {
                 </Form.Item>
                 <Form.Item>
                     <p>Комментарий:</p>
-                    <TextArea rows={4}/>
+                    <TextArea
+                        value={response.comment}
+                        onChange={handleComment}
+                        rows={4}
+                    />
                 </Form.Item>
                 <Form.Item>
                     <p>Ссылка на файлы:</p>
-                    <Input placeholder={'Ссылка'} />
+                    <Input
+                        placeholder={'Ссылка'}
+                        value={response.link}
+                        onChange={handleLink}
+                    />
                 </Form.Item>
                 <Form.Item>
-                    <Button key="submit" type="primary">Сохранить ответ</Button>
+                    <Button onClick={() => setIsVisibleResponse(true)} key="submit" type="primary">Сохранить ответ</Button>
                 </Form.Item>
             </Form>
+            }
+            {isVisibleResponse &&
+            <React.Fragment>
+                <DescriptionItem
+                    title={'Комментарий'}
+                    content={response.comment}
+                />
+                <DescriptionItem
+                    title={'Ссылка'}
+                    content={response.link}
+                />
+            </React.Fragment>
             }
         </React.Fragment>
     );
