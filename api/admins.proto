@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+option go_package = "github.com/EmptyShadow/eltech.journal/api/admins";
+package github.com.EmptyShadow.eltech.journal.api;
+
+import "github.com/EmptyShadow/eltech.journal/api/domain.proto";
+import "google/protobuf/empty.proto";
+
+message CreateRequest {
+  string ContactInformation = 1;
+}
+
+message CreateResponse {
+  github.com.EmptyShadow.eltech.journal.api.Admin Profile = 1;
+}
+
+message ReadRequest {
+  string UserID = 1;
+}
+
+message ReadResponse {
+  github.com.EmptyShadow.eltech.journal.api.Admin Profile = 1;
+}
+
+message ReadMyProfileResponse {
+  github.com.EmptyShadow.eltech.journal.api.Admin Profile = 1;
+}
+
+message UpdateRequest {
+  github.com.EmptyShadow.eltech.journal.api.Admin Profile = 1;
+}
+
+message ReadAllRequest {
+  github.com.EmptyShadow.eltech.journal.api.PageParams PageParams = 1;
+}
+
+message ReadAllResponse {
+  repeated github.com.EmptyShadow.eltech.journal.api.Admin Profiles = 1;
+}
+
+// Серси для работы с активными профилями админа или со своим профилем.
+service AdminsProfiles {
+  // Метод для создания профиля админа.
+  rpc Create(CreateRequest) returns (CreateResponse);
+  // Метод для получения данных по активному профилю админа.
+  rpc Read(ReadRequest) returns (ReadResponse);
+  // Метод для получения списка активных профилей.
+  rpc ReadAll(ReadAllRequest) returns (ReadAllResponse);
+  // Метод для получения данных профиля по токену доступа из заголовков.
+  rpc ReadMyProfile(google.protobuf.Empty) returns (ReadResponse);
+  // Обновить профиль админа, который принадлежит пользователю чей токен доступа передан в заголовке.
+  rpc Update(UpdateRequest) returns (google.protobuf.Empty);
+  // Переключить статус профиля с ACTIVE на DISABLE и наоборот.
+  rpc SwitchActivity(google.protobuf.Empty) returns (google.protobuf.Empty);
+  // Удалить профиль.
+  rpc DeleteMyProfile(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+message SwitchStatusToActiveRequest {
+  string UserID = 1;
+}
+
+message SwitchStatusToBlockedRequest {
+  string UserID = 1;
+  string Reason = 2;
+}
+
+message DeleteRequest {
+  string UserID = 1;
+}
+
+message DeleteScopeRequest {
+  repeated string UsersIDs = 1;
+}
+
+// Сервис для пользователей с ролью админ.
+service AdminsActions {
+  // Метод для получения данных по любому профилю админа.
+  rpc Read(ReadRequest) returns (ReadResponse);
+  // Метод для получения списка всех профилей.
+  rpc ReadAll(ReadAllRequest) returns (ReadAllResponse);
+  // Метод для получения новых профилей, которые должны быть провалидированны.
+  // Доступен только для админов, у которых активный профиль.
+  rpc ReadAllOnValidate(ReadAllRequest) returns (ReadAllResponse);
+
+  // Переключить статус профиля на ACTIVE, в случае если он находится на ON_VALIDATE.
+  rpc SwitchStatusToActive(SwitchStatusToActiveRequest) returns (google.protobuf.Empty);
+  // Переключить статус профиля на BLOCKED, в случае если он находится на ACTIVE или ON_VALIDATE.
+  rpc SwitchStatusToBlocked(SwitchStatusToBlockedRequest) returns (google.protobuf.Empty);
+
+  // Удалить один профиль.
+  rpc Delete(DeleteRequest) returns(google.protobuf.Empty);
+  // Удалить массив профилей.
+  rpc DeleteScope(DeleteScopeRequest) returns(google.protobuf.Empty);
+}

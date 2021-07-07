@@ -12,6 +12,7 @@ import (
 	math "math"
 	math_bits "math/bits"
 	reflect "reflect"
+	strconv "strconv"
 	strings "strings"
 )
 
@@ -25,6 +26,62 @@ var _ = math.Inf
 // A compilation error at this line likely means your copy of the
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
+
+type Role int32
+
+const (
+	ADMIN   Role = 0
+	STUDENT Role = 1
+	TEACHER Role = 2
+)
+
+var Role_name = map[int32]string{
+	0: "ADMIN",
+	1: "STUDENT",
+	2: "TEACHER",
+}
+
+var Role_value = map[string]int32{
+	"ADMIN":   0,
+	"STUDENT": 1,
+	"TEACHER": 2,
+}
+
+func (Role) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_73e6234e76dbdb84, []int{0}
+}
+
+// Статус в котором может быть профиль.
+type ProfileStatus int32
+
+const (
+	// Профиль находится на валидации и его действия не будут работать.
+	ON_VALIDATE ProfileStatus = 0
+	// Профиль активирован.
+	ACTIVE ProfileStatus = 1
+	// Профиль выключен.
+	DISABLE ProfileStatus = 2
+	// Профиль заблокирован.
+	BLOCKED ProfileStatus = 3
+)
+
+var ProfileStatus_name = map[int32]string{
+	0: "ON_VALIDATE",
+	1: "ACTIVE",
+	2: "DISABLE",
+	3: "BLOCKED",
+}
+
+var ProfileStatus_value = map[string]int32{
+	"ON_VALIDATE": 0,
+	"ACTIVE":      1,
+	"DISABLE":     2,
+	"BLOCKED":     3,
+}
+
+func (ProfileStatus) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_73e6234e76dbdb84, []int{1}
+}
 
 // Полное имя пользователя.
 type FullName struct {
@@ -99,12 +156,14 @@ type User struct {
 	Pwd []byte `protobuf:"bytes,3,opt,name=Pwd,proto3" json:"Pwd,omitempty"`
 	// Полное имя.
 	FullName *FullName `protobuf:"bytes,4,opt,name=FullName,proto3" json:"FullName,omitempty"`
+	// Роли которые есть у пользователя.
+	Roles []Role `protobuf:"varint,5,rep,packed,name=Roles,proto3,enum=github.com.EmptyShadow.eltech.journal.api.Role" json:"Roles,omitempty"`
 	// Дата создания записи.
-	CreatedAt *types.Timestamp `protobuf:"bytes,5,opt,name=CreatedAt,proto3" json:"CreatedAt,omitempty"`
+	CreatedAt *types.Timestamp `protobuf:"bytes,6,opt,name=CreatedAt,proto3" json:"CreatedAt,omitempty"`
 	// Дата обновление полей записи.
-	UpdatedAt *types.Timestamp `protobuf:"bytes,6,opt,name=UpdatedAt,proto3" json:"UpdatedAt,omitempty"`
+	UpdatedAt *types.Timestamp `protobuf:"bytes,7,opt,name=UpdatedAt,proto3" json:"UpdatedAt,omitempty"`
 	// Дата удаления записи.
-	DeletedAt *types.Timestamp `protobuf:"bytes,7,opt,name=DeletedAt,proto3" json:"DeletedAt,omitempty"`
+	DeletedAt *types.Timestamp `protobuf:"bytes,8,opt,name=DeletedAt,proto3" json:"DeletedAt,omitempty"`
 }
 
 func (m *User) Reset()      { *m = User{} }
@@ -163,6 +222,13 @@ func (m *User) GetPwd() []byte {
 func (m *User) GetFullName() *FullName {
 	if m != nil {
 		return m.FullName
+	}
+	return nil
+}
+
+func (m *User) GetRoles() []Role {
+	if m != nil {
+		return m.Roles
 	}
 	return nil
 }
@@ -366,7 +432,7 @@ func (m *Session) GetClosedAt() *types.Timestamp {
 	return nil
 }
 
-// Claims утверждения зашитые в jwt токен.
+// Утверждения зашитые в jwt токен.
 type Claims struct {
 	SessionID string `protobuf:"bytes,1,opt,name=SessionID,proto3" json:"SessionID,omitempty"`
 	UserID    string `protobuf:"bytes,2,opt,name=UserID,proto3" json:"UserID,omitempty"`
@@ -418,53 +484,230 @@ func (m *Claims) GetUserID() string {
 	return ""
 }
 
+// Профиль админа.
+type Admin struct {
+	// Пользователь которому принадлежит профиль.
+	User *User `protobuf:"bytes,1,opt,name=User,proto3" json:"User,omitempty"`
+	// Контактная информация об админе, то есть та информация, которой будет достаточно для возможности связи с ним.
+	ContactInformation string `protobuf:"bytes,2,opt,name=ContactInformation,proto3" json:"ContactInformation,omitempty"`
+	// Статус профиля.
+	Status ProfileStatus `protobuf:"varint,3,opt,name=Status,proto3,enum=github.com.EmptyShadow.eltech.journal.api.ProfileStatus" json:"Status,omitempty"`
+	// Причина по которой профиль получил статус BLOCKED.
+	BlockReason string `protobuf:"bytes,4,opt,name=BlockReason,proto3" json:"BlockReason,omitempty"`
+	// Дата время создания профиля.
+	CreatedAt *types.Timestamp `protobuf:"bytes,5,opt,name=CreatedAt,proto3" json:"CreatedAt,omitempty"`
+	// Дата время обновления профиля.
+	UpdatedAt *types.Timestamp `protobuf:"bytes,6,opt,name=UpdatedAt,proto3" json:"UpdatedAt,omitempty"`
+}
+
+func (m *Admin) Reset()      { *m = Admin{} }
+func (*Admin) ProtoMessage() {}
+func (*Admin) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73e6234e76dbdb84, []int{6}
+}
+func (m *Admin) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *Admin) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_Admin.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *Admin) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Admin.Merge(m, src)
+}
+func (m *Admin) XXX_Size() int {
+	return m.Size()
+}
+func (m *Admin) XXX_DiscardUnknown() {
+	xxx_messageInfo_Admin.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Admin proto.InternalMessageInfo
+
+func (m *Admin) GetUser() *User {
+	if m != nil {
+		return m.User
+	}
+	return nil
+}
+
+func (m *Admin) GetContactInformation() string {
+	if m != nil {
+		return m.ContactInformation
+	}
+	return ""
+}
+
+func (m *Admin) GetStatus() ProfileStatus {
+	if m != nil {
+		return m.Status
+	}
+	return ON_VALIDATE
+}
+
+func (m *Admin) GetBlockReason() string {
+	if m != nil {
+		return m.BlockReason
+	}
+	return ""
+}
+
+func (m *Admin) GetCreatedAt() *types.Timestamp {
+	if m != nil {
+		return m.CreatedAt
+	}
+	return nil
+}
+
+func (m *Admin) GetUpdatedAt() *types.Timestamp {
+	if m != nil {
+		return m.UpdatedAt
+	}
+	return nil
+}
+
+// Параметры для страницы извлекаемых данных.
+type PageParams struct {
+	// Количество извлекаемых записей.
+	Limit uint32 `protobuf:"varint,1,opt,name=Limit,proto3" json:"Limit,omitempty"`
+	// Смещение относительно начала списка всех данных.
+	Offset uint32 `protobuf:"varint,2,opt,name=Offset,proto3" json:"Offset,omitempty"`
+}
+
+func (m *PageParams) Reset()      { *m = PageParams{} }
+func (*PageParams) ProtoMessage() {}
+func (*PageParams) Descriptor() ([]byte, []int) {
+	return fileDescriptor_73e6234e76dbdb84, []int{7}
+}
+func (m *PageParams) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *PageParams) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_PageParams.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *PageParams) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PageParams.Merge(m, src)
+}
+func (m *PageParams) XXX_Size() int {
+	return m.Size()
+}
+func (m *PageParams) XXX_DiscardUnknown() {
+	xxx_messageInfo_PageParams.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PageParams proto.InternalMessageInfo
+
+func (m *PageParams) GetLimit() uint32 {
+	if m != nil {
+		return m.Limit
+	}
+	return 0
+}
+
+func (m *PageParams) GetOffset() uint32 {
+	if m != nil {
+		return m.Offset
+	}
+	return 0
+}
+
 func init() {
+	proto.RegisterEnum("github.com.EmptyShadow.eltech.journal.api.Role", Role_name, Role_value)
+	proto.RegisterEnum("github.com.EmptyShadow.eltech.journal.api.ProfileStatus", ProfileStatus_name, ProfileStatus_value)
 	proto.RegisterType((*FullName)(nil), "github.com.EmptyShadow.eltech.journal.api.FullName")
 	proto.RegisterType((*User)(nil), "github.com.EmptyShadow.eltech.journal.api.User")
 	proto.RegisterType((*Credentials)(nil), "github.com.EmptyShadow.eltech.journal.api.Credentials")
 	proto.RegisterType((*Tokens)(nil), "github.com.EmptyShadow.eltech.journal.api.Tokens")
 	proto.RegisterType((*Session)(nil), "github.com.EmptyShadow.eltech.journal.api.Session")
 	proto.RegisterType((*Claims)(nil), "github.com.EmptyShadow.eltech.journal.api.Claims")
+	proto.RegisterType((*Admin)(nil), "github.com.EmptyShadow.eltech.journal.api.Admin")
+	proto.RegisterType((*PageParams)(nil), "github.com.EmptyShadow.eltech.journal.api.PageParams")
 }
 
 func init() { proto.RegisterFile("domain.proto", fileDescriptor_73e6234e76dbdb84) }
 
 var fileDescriptor_73e6234e76dbdb84 = []byte{
-	// 502 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x93, 0x4f, 0x8b, 0xd3, 0x40,
-	0x18, 0xc6, 0x33, 0xdd, 0x6e, 0xda, 0xbe, 0x2d, 0x22, 0x41, 0x96, 0x52, 0x64, 0x2c, 0x39, 0xad,
-	0x97, 0x89, 0xba, 0x20, 0xe2, 0x41, 0xa8, 0x6d, 0x97, 0x2d, 0xf8, 0x67, 0x49, 0x77, 0x11, 0xbc,
-	0x4d, 0x9b, 0x69, 0x3b, 0x3a, 0xe9, 0x84, 0xcc, 0x94, 0xc5, 0x9b, 0x1f, 0xc1, 0xef, 0xe0, 0xc5,
-	0x2f, 0xe1, 0xdd, 0x63, 0x8f, 0x7b, 0xb4, 0xe9, 0xc5, 0xe3, 0x7e, 0x04, 0x49, 0x3a, 0x4d, 0xba,
-	0x88, 0x54, 0x6f, 0x79, 0xde, 0x79, 0x7f, 0x0f, 0xef, 0x3c, 0xf3, 0x06, 0x1a, 0x81, 0x0c, 0x29,
-	0x9f, 0x93, 0x28, 0x96, 0x5a, 0x3a, 0x0f, 0xa7, 0x5c, 0xcf, 0x16, 0x23, 0x32, 0x96, 0x21, 0xe9,
-	0x87, 0x91, 0xfe, 0x34, 0x9c, 0xd1, 0x40, 0x5e, 0x11, 0x26, 0x34, 0x1b, 0xcf, 0xc8, 0x07, 0xb9,
-	0x88, 0xe7, 0x54, 0x10, 0x1a, 0xf1, 0xd6, 0x83, 0xa9, 0x94, 0x53, 0xc1, 0xbc, 0x0c, 0x1c, 0x2d,
-	0x26, 0x9e, 0xe6, 0x21, 0x53, 0x9a, 0x86, 0xd1, 0xc6, 0xcb, 0x0d, 0xa0, 0x7a, 0xba, 0x10, 0xe2,
-	0x0d, 0x0d, 0x99, 0x73, 0x1f, 0x6a, 0xa7, 0x3c, 0x56, 0x3a, 0x15, 0x4d, 0xd4, 0x46, 0xc7, 0x35,
-	0xbf, 0x28, 0x38, 0x18, 0xe0, 0x35, 0x0f, 0x02, 0xc1, 0xb2, 0xe3, 0x52, 0x76, 0xbc, 0x53, 0x71,
-	0x5a, 0x50, 0x7d, 0x45, 0x0d, 0x7c, 0x90, 0x9d, 0xe6, 0xda, 0xfd, 0x5e, 0x82, 0xf2, 0xa5, 0x62,
-	0xb1, 0x73, 0x07, 0x4a, 0x83, 0x9e, 0xf1, 0x2e, 0x0d, 0x7a, 0xce, 0x3d, 0x38, 0xec, 0x87, 0x94,
-	0x0b, 0xe3, 0xb7, 0x11, 0xce, 0x5d, 0x38, 0x38, 0xbf, 0x0a, 0x32, 0x97, 0x86, 0x9f, 0x7e, 0x3a,
-	0x6f, 0x8b, 0x31, 0x9b, 0xe5, 0x36, 0x3a, 0xae, 0x3f, 0x39, 0x21, 0xff, 0x9c, 0x02, 0xd9, 0xa2,
-	0x7e, 0x71, 0xd7, 0x67, 0x50, 0xeb, 0xc6, 0x8c, 0x6a, 0x16, 0x74, 0x74, 0xf3, 0x30, 0x73, 0x6c,
-	0x91, 0x4d, 0x58, 0x64, 0x1b, 0x16, 0xb9, 0xd8, 0x86, 0xe5, 0x17, 0xcd, 0x29, 0x79, 0x19, 0x05,
-	0x86, 0xb4, 0xf7, 0x93, 0x79, 0x73, 0x4a, 0xf6, 0x98, 0x60, 0x1b, 0xb2, 0xb2, 0x9f, 0xcc, 0x9b,
-	0xdd, 0x3e, 0xd4, 0xbb, 0x31, 0x0b, 0xd8, 0x5c, 0x73, 0x2a, 0x54, 0x91, 0x1a, 0xda, 0x4d, 0xad,
-	0x0d, 0xf5, 0xe1, 0x59, 0xe7, 0xf1, 0x19, 0x55, 0xb3, 0xf3, 0x77, 0xbd, 0x2c, 0xd1, 0x86, 0xbf,
-	0x5b, 0x72, 0x9f, 0x83, 0x7d, 0x21, 0x3f, 0xb2, 0xb9, 0x72, 0x8e, 0xc0, 0xee, 0x8c, 0xc7, 0x4c,
-	0x29, 0x63, 0x61, 0x94, 0xd3, 0x84, 0x8a, 0xcf, 0x26, 0x31, 0x53, 0x33, 0xf3, 0x22, 0x5b, 0xe9,
-	0x7e, 0x45, 0x50, 0x19, 0x32, 0xa5, 0xb8, 0x9c, 0xff, 0xf1, 0x8a, 0x47, 0x60, 0xa7, 0xaf, 0x3b,
-	0xe8, 0x19, 0xc8, 0xa8, 0xdb, 0x21, 0x1f, 0xfc, 0x4f, 0xc8, 0x4f, 0xa1, 0xda, 0x15, 0x52, 0x65,
-	0x60, 0x79, 0x2f, 0x98, 0xf7, 0xba, 0x2f, 0xc0, 0xee, 0x0a, 0xca, 0x43, 0x95, 0x2e, 0xb3, 0x19,
-	0x37, 0x1f, 0xb5, 0x28, 0xfc, 0x6d, 0xe2, 0x97, 0x93, 0xe5, 0x0a, 0x5b, 0xd7, 0x2b, 0x6c, 0xdd,
-	0xac, 0x30, 0xfa, 0x9c, 0x60, 0xf4, 0x2d, 0xc1, 0xe8, 0x47, 0x82, 0xd1, 0x32, 0xc1, 0xe8, 0x67,
-	0x82, 0xd1, 0xaf, 0x04, 0x5b, 0x37, 0x09, 0x46, 0x5f, 0xd6, 0xd8, 0x5a, 0xae, 0xb1, 0x75, 0xbd,
-	0xc6, 0xd6, 0xfb, 0x47, 0xc5, 0x2a, 0x7a, 0x3b, 0xab, 0xe8, 0xdd, 0x5e, 0x45, 0x8f, 0x46, 0xdc,
-	0xdb, 0xfc, 0xc8, 0x23, 0x3b, 0xbb, 0xc5, 0xc9, 0xef, 0x00, 0x00, 0x00, 0xff, 0xff, 0x7e, 0xf0,
-	0xd9, 0x0a, 0xd9, 0x03, 0x00, 0x00,
+	// 737 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x95, 0xcd, 0x6e, 0xdb, 0x46,
+	0x10, 0xc7, 0x49, 0x7d, 0x50, 0xd2, 0xc8, 0x76, 0x85, 0x45, 0x61, 0x08, 0x46, 0xc1, 0x0a, 0x3c,
+	0xb9, 0x2e, 0x40, 0xb5, 0x36, 0x50, 0x18, 0x3e, 0x14, 0xa0, 0x48, 0x1a, 0x26, 0x2a, 0x4b, 0x02,
+	0x25, 0xbb, 0x40, 0x2f, 0xc5, 0x5a, 0x5c, 0x49, 0x5b, 0x93, 0x5c, 0x81, 0xbb, 0x82, 0xd1, 0x5b,
+	0x0f, 0x7d, 0x80, 0xbc, 0x43, 0x2e, 0x79, 0x94, 0x1c, 0x7d, 0xf4, 0x31, 0x96, 0x73, 0xc8, 0xd1,
+	0x8f, 0x10, 0xf0, 0x43, 0x5f, 0x48, 0x02, 0x47, 0xb9, 0xe9, 0x3f, 0xbb, 0xbf, 0xd9, 0xd1, 0x7f,
+	0x66, 0x40, 0xd8, 0xf1, 0x58, 0x80, 0x69, 0xa8, 0x4f, 0x23, 0x26, 0x18, 0xfa, 0x69, 0x4c, 0xc5,
+	0x64, 0x76, 0xa3, 0x0f, 0x59, 0xa0, 0xdb, 0xc1, 0x54, 0xfc, 0xdb, 0x9f, 0x60, 0x8f, 0xdd, 0xe9,
+	0xc4, 0x17, 0x64, 0x38, 0xd1, 0xff, 0x61, 0xb3, 0x28, 0xc4, 0xbe, 0x8e, 0xa7, 0xf4, 0xe0, 0xc7,
+	0x31, 0x63, 0x63, 0x9f, 0x34, 0x13, 0xf0, 0x66, 0x36, 0x6a, 0x0a, 0x1a, 0x10, 0x2e, 0x70, 0x30,
+	0x4d, 0x73, 0x69, 0x1e, 0x94, 0xcf, 0x67, 0xbe, 0xdf, 0xc1, 0x01, 0x41, 0x3f, 0x40, 0xe5, 0x9c,
+	0x46, 0x5c, 0xc4, 0xa2, 0x2e, 0x37, 0xe4, 0xc3, 0x8a, 0xbb, 0x0a, 0x20, 0x15, 0xe0, 0x92, 0x7a,
+	0x9e, 0x4f, 0x92, 0xe3, 0x5c, 0x72, 0xbc, 0x16, 0x41, 0x07, 0x50, 0x6e, 0xe3, 0x0c, 0xce, 0x27,
+	0xa7, 0x4b, 0xad, 0xfd, 0x9f, 0x87, 0xc2, 0x15, 0x27, 0x11, 0xda, 0x83, 0x9c, 0x63, 0x65, 0xb9,
+	0x73, 0x8e, 0x85, 0xbe, 0x87, 0xa2, 0x1d, 0x60, 0xea, 0x67, 0xf9, 0x52, 0x81, 0x6a, 0x90, 0xef,
+	0xdd, 0x79, 0x49, 0x96, 0x1d, 0x37, 0xfe, 0x89, 0xba, 0xab, 0x32, 0xeb, 0x85, 0x86, 0x7c, 0x58,
+	0x3d, 0x3e, 0xd1, 0xbf, 0xda, 0x05, 0x7d, 0x81, 0xba, 0xab, 0xff, 0x6a, 0x43, 0xd1, 0x65, 0x3e,
+	0xe1, 0xf5, 0x62, 0x23, 0x7f, 0xb8, 0x77, 0xdc, 0xdc, 0x22, 0x5b, 0xcc, 0xb9, 0x29, 0x8d, 0x4e,
+	0xa1, 0x62, 0x46, 0x04, 0x0b, 0xe2, 0x19, 0xa2, 0xae, 0x24, 0x85, 0x1d, 0xe8, 0xa9, 0xe7, 0xfa,
+	0xc2, 0x73, 0x7d, 0xb0, 0xf0, 0xdc, 0x5d, 0x5d, 0x8e, 0xc9, 0xab, 0xa9, 0x97, 0x91, 0xa5, 0x97,
+	0xc9, 0xe5, 0xe5, 0x98, 0xb4, 0x88, 0x4f, 0x52, 0xb2, 0xfc, 0x32, 0xb9, 0xbc, 0xac, 0xd9, 0x50,
+	0x35, 0x23, 0xe2, 0x91, 0x50, 0x50, 0xec, 0xf3, 0x95, 0xf9, 0xf2, 0xba, 0xf9, 0x0d, 0xa8, 0xf6,
+	0x2f, 0x8c, 0x5f, 0x2f, 0x30, 0x9f, 0xf4, 0xfe, 0xb4, 0x92, 0xc6, 0xec, 0xb8, 0xeb, 0x21, 0xed,
+	0x0c, 0x94, 0x01, 0xbb, 0x25, 0x21, 0x47, 0xfb, 0xa0, 0x18, 0xc3, 0x21, 0xe1, 0x3c, 0x4b, 0x91,
+	0x29, 0x54, 0x87, 0x92, 0x4b, 0x46, 0x11, 0xe1, 0x93, 0xac, 0xb1, 0x0b, 0xa9, 0xbd, 0x96, 0xa1,
+	0xd4, 0x27, 0x9c, 0x53, 0x16, 0x7e, 0x32, 0x0c, 0xfb, 0xa0, 0xc4, 0x43, 0xe2, 0x58, 0x19, 0x94,
+	0xa9, 0x4d, 0x93, 0xf3, 0xdb, 0x98, 0xfc, 0x1b, 0x94, 0x4d, 0x9f, 0xf1, 0x04, 0x2c, 0xbc, 0x08,
+	0x2e, 0xef, 0x6a, 0xbf, 0x83, 0x62, 0xfa, 0x98, 0x06, 0x3c, 0xde, 0x89, 0xac, 0xdc, 0x65, 0xa9,
+	0xab, 0xc0, 0x97, 0x2a, 0xd6, 0xde, 0xe7, 0xa0, 0x68, 0x78, 0x01, 0x0d, 0x91, 0x99, 0x0e, 0x7e,
+	0x82, 0x56, 0xb7, 0x1a, 0xb3, 0x18, 0x73, 0xd3, 0xad, 0xd1, 0x01, 0x99, 0x2c, 0x14, 0x78, 0x28,
+	0x9c, 0x70, 0xc4, 0xa2, 0x00, 0x0b, 0xca, 0xc2, 0xec, 0xc9, 0xcf, 0x9c, 0xa0, 0x1e, 0x28, 0x7d,
+	0x81, 0xc5, 0x8c, 0x27, 0x6e, 0xed, 0x1d, 0x9f, 0x6e, 0xf1, 0x6c, 0x2f, 0x62, 0x23, 0xea, 0x93,
+	0x94, 0x77, 0xb3, 0x3c, 0xf1, 0x50, 0xb4, 0x7c, 0x36, 0xbc, 0x75, 0x09, 0xe6, 0x2c, 0x4c, 0xbc,
+	0xac, 0xb8, 0xeb, 0xa1, 0xcd, 0x26, 0x15, 0xbf, 0x79, 0x13, 0x94, 0x2d, 0x36, 0x41, 0x3b, 0x03,
+	0xe8, 0xe1, 0x31, 0xe9, 0xe1, 0x08, 0x07, 0xc9, 0x38, 0xb7, 0x69, 0x40, 0x45, 0xe2, 0xf5, 0xae,
+	0x9b, 0x8a, 0xb8, 0x45, 0xdd, 0xd1, 0x88, 0x13, 0x91, 0xf8, 0xb5, 0xeb, 0x66, 0xea, 0xe8, 0x67,
+	0x28, 0xc4, 0x2b, 0x8c, 0x2a, 0x50, 0x34, 0xac, 0x4b, 0xa7, 0x53, 0x93, 0x50, 0x15, 0x4a, 0xfd,
+	0xc1, 0x95, 0x65, 0x77, 0x06, 0x35, 0x39, 0x16, 0x03, 0xdb, 0x30, 0x2f, 0x6c, 0xb7, 0x96, 0x3b,
+	0x3a, 0x87, 0xdd, 0x0d, 0x5f, 0xd0, 0x77, 0x50, 0xed, 0x76, 0xfe, 0xbe, 0x36, 0xda, 0x8e, 0x65,
+	0x0c, 0xec, 0x9a, 0x84, 0x00, 0x14, 0xc3, 0x1c, 0x38, 0xd7, 0x76, 0x8a, 0x5a, 0x4e, 0xdf, 0x68,
+	0xb5, 0xed, 0x5a, 0x2e, 0x16, 0xad, 0x76, 0xd7, 0xfc, 0xc3, 0xb6, 0x6a, 0xf9, 0xd6, 0xe8, 0xfe,
+	0x51, 0x95, 0x1e, 0x1e, 0x55, 0xe9, 0xf9, 0x51, 0x95, 0xff, 0x9b, 0xab, 0xf2, 0x9b, 0xb9, 0x2a,
+	0xbf, 0x9d, 0xab, 0xf2, 0xfd, 0x5c, 0x95, 0xdf, 0xcd, 0x55, 0xf9, 0xc3, 0x5c, 0x95, 0x9e, 0xe7,
+	0xaa, 0xfc, 0xea, 0x49, 0x95, 0xee, 0x9f, 0x54, 0xe9, 0xe1, 0x49, 0x95, 0xfe, 0xfa, 0x65, 0xd5,
+	0xbd, 0xe6, 0x5a, 0xf7, 0x9a, 0x9b, 0xdd, 0x6b, 0xe2, 0x29, 0x6d, 0xa6, 0xdf, 0x89, 0x1b, 0x25,
+	0xf1, 0xed, 0xe4, 0x63, 0x00, 0x00, 0x00, 0xff, 0xff, 0xa9, 0x8b, 0x80, 0x18, 0x38, 0x06, 0x00,
+	0x00,
 }
 
+func (x Role) String() string {
+	s, ok := Role_name[int32(x)]
+	if ok {
+		return s
+	}
+	return strconv.Itoa(int(x))
+}
+func (x ProfileStatus) String() string {
+	s, ok := ProfileStatus_name[int32(x)]
+	if ok {
+		return s
+	}
+	return strconv.Itoa(int(x))
+}
 func (this *FullName) Equal(that interface{}) bool {
 	if that == nil {
 		return this == nil
@@ -525,6 +768,14 @@ func (this *User) Equal(that interface{}) bool {
 	}
 	if !this.FullName.Equal(that1.FullName) {
 		return false
+	}
+	if len(this.Roles) != len(that1.Roles) {
+		return false
+	}
+	for i := range this.Roles {
+		if this.Roles[i] != that1.Roles[i] {
+			return false
+		}
 	}
 	if !this.CreatedAt.Equal(that1.CreatedAt) {
 		return false
@@ -651,6 +902,72 @@ func (this *Claims) Equal(that interface{}) bool {
 	}
 	return true
 }
+func (this *Admin) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*Admin)
+	if !ok {
+		that2, ok := that.(Admin)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if !this.User.Equal(that1.User) {
+		return false
+	}
+	if this.ContactInformation != that1.ContactInformation {
+		return false
+	}
+	if this.Status != that1.Status {
+		return false
+	}
+	if this.BlockReason != that1.BlockReason {
+		return false
+	}
+	if !this.CreatedAt.Equal(that1.CreatedAt) {
+		return false
+	}
+	if !this.UpdatedAt.Equal(that1.UpdatedAt) {
+		return false
+	}
+	return true
+}
+func (this *PageParams) Equal(that interface{}) bool {
+	if that == nil {
+		return this == nil
+	}
+
+	that1, ok := that.(*PageParams)
+	if !ok {
+		that2, ok := that.(PageParams)
+		if ok {
+			that1 = &that2
+		} else {
+			return false
+		}
+	}
+	if that1 == nil {
+		return this == nil
+	} else if this == nil {
+		return false
+	}
+	if this.Limit != that1.Limit {
+		return false
+	}
+	if this.Offset != that1.Offset {
+		return false
+	}
+	return true
+}
 func (this *FullName) GoString() string {
 	if this == nil {
 		return "nil"
@@ -667,7 +984,7 @@ func (this *User) GoString() string {
 	if this == nil {
 		return "nil"
 	}
-	s := make([]string, 0, 11)
+	s := make([]string, 0, 12)
 	s = append(s, "&domain.User{")
 	s = append(s, "ID: "+fmt.Sprintf("%#v", this.ID)+",\n")
 	s = append(s, "Email: "+fmt.Sprintf("%#v", this.Email)+",\n")
@@ -675,6 +992,7 @@ func (this *User) GoString() string {
 	if this.FullName != nil {
 		s = append(s, "FullName: "+fmt.Sprintf("%#v", this.FullName)+",\n")
 	}
+	s = append(s, "Roles: "+fmt.Sprintf("%#v", this.Roles)+",\n")
 	if this.CreatedAt != nil {
 		s = append(s, "CreatedAt: "+fmt.Sprintf("%#v", this.CreatedAt)+",\n")
 	}
@@ -734,6 +1052,38 @@ func (this *Claims) GoString() string {
 	s = append(s, "&domain.Claims{")
 	s = append(s, "SessionID: "+fmt.Sprintf("%#v", this.SessionID)+",\n")
 	s = append(s, "UserID: "+fmt.Sprintf("%#v", this.UserID)+",\n")
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *Admin) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 10)
+	s = append(s, "&domain.Admin{")
+	if this.User != nil {
+		s = append(s, "User: "+fmt.Sprintf("%#v", this.User)+",\n")
+	}
+	s = append(s, "ContactInformation: "+fmt.Sprintf("%#v", this.ContactInformation)+",\n")
+	s = append(s, "Status: "+fmt.Sprintf("%#v", this.Status)+",\n")
+	s = append(s, "BlockReason: "+fmt.Sprintf("%#v", this.BlockReason)+",\n")
+	if this.CreatedAt != nil {
+		s = append(s, "CreatedAt: "+fmt.Sprintf("%#v", this.CreatedAt)+",\n")
+	}
+	if this.UpdatedAt != nil {
+		s = append(s, "UpdatedAt: "+fmt.Sprintf("%#v", this.UpdatedAt)+",\n")
+	}
+	s = append(s, "}")
+	return strings.Join(s, "")
+}
+func (this *PageParams) GoString() string {
+	if this == nil {
+		return "nil"
+	}
+	s := make([]string, 0, 6)
+	s = append(s, "&domain.PageParams{")
+	s = append(s, "Limit: "+fmt.Sprintf("%#v", this.Limit)+",\n")
+	s = append(s, "Offset: "+fmt.Sprintf("%#v", this.Offset)+",\n")
 	s = append(s, "}")
 	return strings.Join(s, "")
 }
@@ -819,7 +1169,7 @@ func (m *User) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i = encodeVarintDomain(dAtA, i, uint64(size))
 		}
 		i--
-		dAtA[i] = 0x3a
+		dAtA[i] = 0x42
 	}
 	if m.UpdatedAt != nil {
 		{
@@ -831,7 +1181,7 @@ func (m *User) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i = encodeVarintDomain(dAtA, i, uint64(size))
 		}
 		i--
-		dAtA[i] = 0x32
+		dAtA[i] = 0x3a
 	}
 	if m.CreatedAt != nil {
 		{
@@ -842,6 +1192,24 @@ func (m *User) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i -= size
 			i = encodeVarintDomain(dAtA, i, uint64(size))
 		}
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.Roles) > 0 {
+		dAtA5 := make([]byte, len(m.Roles)*10)
+		var j4 int
+		for _, num := range m.Roles {
+			for num >= 1<<7 {
+				dAtA5[j4] = uint8(uint64(num)&0x7f | 0x80)
+				num >>= 7
+				j4++
+			}
+			dAtA5[j4] = uint8(num)
+			j4++
+		}
+		i -= j4
+		copy(dAtA[i:], dAtA5[:j4])
+		i = encodeVarintDomain(dAtA, i, uint64(j4))
 		i--
 		dAtA[i] = 0x2a
 	}
@@ -1053,6 +1421,117 @@ func (m *Claims) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
+func (m *Admin) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *Admin) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *Admin) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.UpdatedAt != nil {
+		{
+			size, err := m.UpdatedAt.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintDomain(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x32
+	}
+	if m.CreatedAt != nil {
+		{
+			size, err := m.CreatedAt.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintDomain(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.BlockReason) > 0 {
+		i -= len(m.BlockReason)
+		copy(dAtA[i:], m.BlockReason)
+		i = encodeVarintDomain(dAtA, i, uint64(len(m.BlockReason)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if m.Status != 0 {
+		i = encodeVarintDomain(dAtA, i, uint64(m.Status))
+		i--
+		dAtA[i] = 0x18
+	}
+	if len(m.ContactInformation) > 0 {
+		i -= len(m.ContactInformation)
+		copy(dAtA[i:], m.ContactInformation)
+		i = encodeVarintDomain(dAtA, i, uint64(len(m.ContactInformation)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.User != nil {
+		{
+			size, err := m.User.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintDomain(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0xa
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *PageParams) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PageParams) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *PageParams) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Offset != 0 {
+		i = encodeVarintDomain(dAtA, i, uint64(m.Offset))
+		i--
+		dAtA[i] = 0x10
+	}
+	if m.Limit != 0 {
+		i = encodeVarintDomain(dAtA, i, uint64(m.Limit))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
 func encodeVarintDomain(dAtA []byte, offset int, v uint64) int {
 	offset -= sovDomain(v)
 	base := offset
@@ -1106,6 +1585,13 @@ func (m *User) Size() (n int) {
 	if m.FullName != nil {
 		l = m.FullName.Size()
 		n += 1 + l + sovDomain(uint64(l))
+	}
+	if len(m.Roles) > 0 {
+		l = 0
+		for _, e := range m.Roles {
+			l += sovDomain(uint64(e))
+		}
+		n += 1 + sovDomain(uint64(l)) + l
 	}
 	if m.CreatedAt != nil {
 		l = m.CreatedAt.Size()
@@ -1198,6 +1684,53 @@ func (m *Claims) Size() (n int) {
 	return n
 }
 
+func (m *Admin) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.User != nil {
+		l = m.User.Size()
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	l = len(m.ContactInformation)
+	if l > 0 {
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	if m.Status != 0 {
+		n += 1 + sovDomain(uint64(m.Status))
+	}
+	l = len(m.BlockReason)
+	if l > 0 {
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	if m.CreatedAt != nil {
+		l = m.CreatedAt.Size()
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	if m.UpdatedAt != nil {
+		l = m.UpdatedAt.Size()
+		n += 1 + l + sovDomain(uint64(l))
+	}
+	return n
+}
+
+func (m *PageParams) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Limit != 0 {
+		n += 1 + sovDomain(uint64(m.Limit))
+	}
+	if m.Offset != 0 {
+		n += 1 + sovDomain(uint64(m.Offset))
+	}
+	return n
+}
+
 func sovDomain(x uint64) (n int) {
 	return (math_bits.Len64(x|1) + 6) / 7
 }
@@ -1225,6 +1758,7 @@ func (this *User) String() string {
 		`Email:` + fmt.Sprintf("%v", this.Email) + `,`,
 		`Pwd:` + fmt.Sprintf("%v", this.Pwd) + `,`,
 		`FullName:` + strings.Replace(this.FullName.String(), "FullName", "FullName", 1) + `,`,
+		`Roles:` + fmt.Sprintf("%v", this.Roles) + `,`,
 		`CreatedAt:` + strings.Replace(fmt.Sprintf("%v", this.CreatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
 		`UpdatedAt:` + strings.Replace(fmt.Sprintf("%v", this.UpdatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
 		`DeletedAt:` + strings.Replace(fmt.Sprintf("%v", this.DeletedAt), "Timestamp", "types.Timestamp", 1) + `,`,
@@ -1274,6 +1808,32 @@ func (this *Claims) String() string {
 	s := strings.Join([]string{`&Claims{`,
 		`SessionID:` + fmt.Sprintf("%v", this.SessionID) + `,`,
 		`UserID:` + fmt.Sprintf("%v", this.UserID) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *Admin) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&Admin{`,
+		`User:` + strings.Replace(this.User.String(), "User", "User", 1) + `,`,
+		`ContactInformation:` + fmt.Sprintf("%v", this.ContactInformation) + `,`,
+		`Status:` + fmt.Sprintf("%v", this.Status) + `,`,
+		`BlockReason:` + fmt.Sprintf("%v", this.BlockReason) + `,`,
+		`CreatedAt:` + strings.Replace(fmt.Sprintf("%v", this.CreatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
+		`UpdatedAt:` + strings.Replace(fmt.Sprintf("%v", this.UpdatedAt), "Timestamp", "types.Timestamp", 1) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *PageParams) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&PageParams{`,
+		`Limit:` + fmt.Sprintf("%v", this.Limit) + `,`,
+		`Offset:` + fmt.Sprintf("%v", this.Offset) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -1599,6 +2159,75 @@ func (m *User) Unmarshal(dAtA []byte) error {
 			}
 			iNdEx = postIndex
 		case 5:
+			if wireType == 0 {
+				var v Role
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowDomain
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= Role(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.Roles = append(m.Roles, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowDomain
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return ErrInvalidLengthDomain
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex < 0 {
+					return ErrInvalidLengthDomain
+				}
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				var elementCount int
+				if elementCount != 0 && len(m.Roles) == 0 {
+					m.Roles = make([]Role, 0, elementCount)
+				}
+				for iNdEx < postIndex {
+					var v Role
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowDomain
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= Role(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.Roles = append(m.Roles, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field Roles", wireType)
+			}
+		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
 			}
@@ -1634,7 +2263,7 @@ func (m *User) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 6:
+		case 7:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
 			}
@@ -1670,7 +2299,7 @@ func (m *User) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 7:
+		case 8:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field DeletedAt", wireType)
 			}
@@ -2248,6 +2877,341 @@ func (m *Claims) Unmarshal(dAtA []byte) error {
 			}
 			m.UserID = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDomain(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *Admin) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDomain
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: Admin: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: Admin: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field User", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.User == nil {
+				m.User = &User{}
+			}
+			if err := m.User.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ContactInformation", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ContactInformation = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
+			}
+			m.Status = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Status |= ProfileStatus(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field BlockReason", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.BlockReason = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field CreatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.CreatedAt == nil {
+				m.CreatedAt = &types.Timestamp{}
+			}
+			if err := m.CreatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UpdatedAt", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthDomain
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.UpdatedAt == nil {
+				m.UpdatedAt = &types.Timestamp{}
+			}
+			if err := m.UpdatedAt.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipDomain(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthDomain
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *PageParams) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowDomain
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PageParams: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PageParams: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Limit", wireType)
+			}
+			m.Limit = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Limit |= uint32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Offset", wireType)
+			}
+			m.Offset = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowDomain
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Offset |= uint32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipDomain(dAtA[iNdEx:])
